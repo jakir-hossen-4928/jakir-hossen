@@ -1,15 +1,12 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
-import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TechnologyInput } from "./project-form/TechnologyInput";
+import { useState } from "react";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -25,16 +22,10 @@ interface ProjectFormProps {
   mode?: "add" | "edit";
 }
 
-const SUGGESTED_TECHNOLOGIES = [
-  "React", "Next.js", "TypeScript", "JavaScript", "Node.js", "Express", 
-  "MongoDB", "PostgreSQL", "Tailwind CSS", "Firebase", "AWS", "Docker"
-];
-
 export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectFormProps) => {
   const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
     initialData?.technologies || []
   );
-  const [newTech, setNewTech] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,39 +53,47 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectForm
     onSubmit(project);
   };
 
-  const addTechnology = (tech: string) => {
-    if (!tech.trim()) return;
-    if (selectedTechnologies.includes(tech.trim())) {
-      toast.error("Technology already added");
-      return;
-    }
-    setSelectedTechnologies([...selectedTechnologies, tech.trim()]);
-    setNewTech("");
-  };
-
-  const removeTechnology = (tech: string) => {
-    setSelectedTechnologies(selectedTechnologies.filter(t => t !== tech));
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Project Title</FormLabel>
-              <FormControl>
-                <Input placeholder="My Awesome Project" {...field} />
-              </FormControl>
-              <FormDescription>
-                Give your project a clear and descriptive title
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid gap-6 sm:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Project Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="My Awesome Project" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Give your project a clear and descriptive title
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Project Image URL</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="https://example.com/image.jpg"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Provide a URL for your project's preview image
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -105,7 +104,7 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectForm
               <FormControl>
                 <Textarea 
                   placeholder="A brief description of your project..."
-                  className="min-h-[100px]"
+                  className="min-h-[100px] resize-y"
                   {...field}
                 />
               </FormControl>
@@ -117,77 +116,12 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectForm
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Project Image URL</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="https://example.com/image.jpg"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                Provide a URL for your project's preview image. You can use image hosting services like imgur.com
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className="space-y-2">
-          <Label>Technologies</Label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {selectedTechnologies.map((tech) => (
-              <Badge key={tech} variant="secondary" className="gap-1">
-                {tech}
-                <button
-                  type="button"
-                  onClick={() => removeTechnology(tech)}
-                  className="ml-1 hover:text-destructive"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <Input
-              value={newTech}
-              onChange={(e) => setNewTech(e.target.value)}
-              placeholder="Add a technology..."
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  addTechnology(newTech);
-                }
-              }}
-            />
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={() => addTechnology(newTech)}
-            >
-              Add
-            </Button>
-          </div>
-          <div className="mt-2">
-            <p className="text-sm text-muted-foreground mb-2">Suggested technologies:</p>
-            <div className="flex flex-wrap gap-2">
-              {SUGGESTED_TECHNOLOGIES.map((tech) => (
-                <Badge
-                  key={tech}
-                  variant="outline"
-                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                  onClick={() => addTechnology(tech)}
-                >
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </div>
+          <FormLabel>Technologies</FormLabel>
+          <TechnologyInput 
+            selectedTechnologies={selectedTechnologies}
+            setSelectedTechnologies={setSelectedTechnologies}
+          />
         </div>
 
         <FormField
@@ -219,7 +153,7 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectForm
               <FormControl>
                 <Textarea
                   placeholder="- Feature 1&#10;- Feature 2&#10;- Feature 3"
-                  className="min-h-[100px]"
+                  className="min-h-[100px] resize-y"
                   {...field}
                 />
               </FormControl>

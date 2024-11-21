@@ -7,7 +7,6 @@ import {
   FileText,
   FolderKanban,
   Menu,
-  X,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -34,6 +33,7 @@ export const DashboardLayout = () => {
           <Link
             key={item.name}
             to={item.href}
+            onClick={() => setIsMobileMenuOpen(false)}
             className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
               isCurrentPath(item.href)
                 ? "bg-primary text-primary-foreground"
@@ -55,31 +55,36 @@ export const DashboardLayout = () => {
         <SheetTrigger asChild>
           <Button
             variant="ghost"
+            size="icon"
             className="lg:hidden fixed top-4 left-4 z-50"
           >
             <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64">
-          <div className="flex flex-col gap-4 mt-8">
-            <NavLinks />
+        <SheetContent side="left" className="w-[240px] p-0">
+          <div className="px-4 py-6 border-b">
+            <h2 className="text-lg font-semibold text-primary">Admin Panel</h2>
           </div>
+          <nav className="flex flex-col gap-1 p-4">
+            <NavLinks />
+          </nav>
         </SheetContent>
       </Sheet>
 
       {/* Desktop Navigation */}
       <div className="hidden lg:flex fixed inset-y-0 flex-col w-64 border-r">
-        <div className="p-4">
+        <div className="p-6 border-b">
           <h2 className="text-2xl font-bold text-primary">Admin Panel</h2>
         </div>
-        <nav className="flex-1 space-y-2 p-4">
+        <nav className="flex-1 space-y-1 p-4">
           <NavLinks />
         </nav>
       </div>
 
       {/* Main Content */}
-      <div className="lg:pl-64">
-        <div className="p-8">
+      <div className="lg:pl-64 min-h-screen">
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </div>
       </div>

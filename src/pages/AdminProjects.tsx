@@ -40,13 +40,17 @@ const AdminProjects = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Projects</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Projects</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -54,11 +58,13 @@ const AdminProjects = () => {
               Add Project
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Add New Project</DialogTitle>
             </DialogHeader>
-            <ProjectForm onSubmit={handleAddProject} mode="add" />
+            <div className="mt-4">
+              <ProjectForm onSubmit={handleAddProject} mode="add" />
+            </div>
           </DialogContent>
         </Dialog>
       </div>
