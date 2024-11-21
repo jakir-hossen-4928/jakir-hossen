@@ -41,7 +41,7 @@ export const DashboardLayout = () => {
             }`}
           >
             <Icon className="h-5 w-5" />
-            {item.name}
+            <span className="hidden sm:inline">{item.name}</span>
           </Link>
         );
       })}
