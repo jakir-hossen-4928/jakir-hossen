@@ -8,7 +8,7 @@ import {
   FolderKanban,
   Menu,
 } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 const navigation = [
   { name: "Overview", href: "/admin", icon: LayoutDashboard },
@@ -41,7 +41,7 @@ export const DashboardLayout = () => {
             }`}
           >
             <Icon className="h-5 w-5" />
-            <span>{item.name}</span>
+            <span className="hidden md:inline">{item.name}</span>
           </Link>
         );
       })}
