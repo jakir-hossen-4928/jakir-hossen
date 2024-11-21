@@ -41,7 +41,7 @@ export const DashboardLayout = () => {
             }`}
           >
             <Icon className="h-5 w-5" />
-            <span className="hidden sm:inline">{item.name}</span>
+            <span>{item.name}</span>
           </Link>
         );
       })}
@@ -50,18 +50,19 @@ export const DashboardLayout = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Mobile Menu Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="lg:hidden fixed top-4 left-4 z-50"
+        onClick={() => setIsMobileMenuOpen(true)}
+      >
+        <Menu className="h-5 w-5" />
+        <span className="sr-only">Toggle menu</span>
+      </Button>
+
       {/* Mobile Navigation */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden fixed top-4 left-4 z-50"
-          >
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
-        </SheetTrigger>
         <SheetContent side="left" className="w-[240px] p-0">
           <div className="px-4 py-6 border-b">
             <h2 className="text-lg font-semibold text-primary">Admin Panel</h2>
