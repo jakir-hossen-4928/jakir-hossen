@@ -1,4 +1,4 @@
-import React from "react"; // Add this import for React
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,10 @@ interface TechnologyInputProps {
 
 const SUGGESTED_TECHNOLOGIES = [
   "React", "Next.js", "TypeScript", "JavaScript", "Node.js", "Express", 
-  "MongoDB", "PostgreSQL", "Tailwind CSS", "Firebase", "AWS", "Docker"
+  "MongoDB", "PostgreSQL", "Tailwind CSS", "Firebase", "AWS", "Docker",
+  "Vue.js", "Angular", "Svelte", "Python", "Django", "Flask",
+  "GraphQL", "REST API", "Redis", "Kubernetes", "CI/CD", "Jest",
+  "React Native", "Flutter", "Swift", "Kotlin", "Java", "Spring Boot"
 ];
 
 export const TechnologyInput = ({ 
@@ -35,9 +38,14 @@ export const TechnologyInput = ({
     setSelectedTechnologies(selectedTechnologies.filter(t => t !== tech));
   };
 
+  const handleSuggestionClick = (tech: string) => {
+    setNewTech(tech);
+    addTechnology(tech);
+  };
+
   return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap gap-2 mb-2">
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2 mb-2 min-h-[40px] p-2 border rounded-md bg-background">
         {selectedTechnologies.map((tech) => (
           <Badge key={tech} variant="secondary" className="gap-1">
             {tech}
@@ -80,7 +88,7 @@ export const TechnologyInput = ({
               key={tech}
               variant="outline"
               className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-              onClick={() => addTechnology(tech)}
+              onClick={() => handleSuggestionClick(tech)}
             >
               {tech}
             </Badge>

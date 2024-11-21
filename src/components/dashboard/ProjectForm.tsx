@@ -7,7 +7,8 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TechnologyInput } from "./project-form/TechnologyInput";
 import { useState } from "react";
-import { toast } from "sonner"; // Add this import for toast notifications
+import { toast } from "sonner";
+import { RichTextEditor } from "@/components/editor/RichTextEditor";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -57,44 +58,42 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectForm
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Project Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="My Awesome Project" {...field} />
-                </FormControl>
-                <FormDescription>
-                  Give your project a clear and descriptive title
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Project Title</FormLabel>
+              <FormControl>
+                <Input placeholder="My Awesome Project" {...field} />
+              </FormControl>
+              <FormDescription>
+                Give your project a clear and descriptive title
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Project Image URL</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="https://example.com/image.jpg"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Provide a URL for your project's preview image
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Project Image URL</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="https://example.com/image.jpg"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Provide a URL for your project's preview image
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -103,10 +102,9 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectForm
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="A brief description of your project..."
-                  className="min-h-[100px] resize-y"
-                  {...field}
+                <RichTextEditor
+                  onChange={(content) => field.onChange(content)}
+                  initialContent={field.value}
                 />
               </FormControl>
               <FormDescription>
