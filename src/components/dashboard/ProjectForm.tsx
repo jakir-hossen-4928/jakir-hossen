@@ -3,6 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  image: z.string().url("Please enter a valid image URL"),
+  githubUrl: z.string().url("Please enter a valid GitHub URL"),
+  features: z.string().min(10, "Please add at least one feature")
+});
 
 interface ProjectFormProps {
   onSubmit: (project: any) => void;
@@ -10,68 +25,216 @@ interface ProjectFormProps {
   mode?: "add" | "edit";
 }
 
+const SUGGESTED_TECHNOLOGIES = [
+  "React", "Next.js", "TypeScript", "JavaScript", "Node.js", "Express", 
+  "MongoDB", "PostgreSQL", "Tailwind CSS", "Firebase", "AWS", "Docker"
+];
+
 export const ProjectForm = ({ onSubmit, initialData, mode = "add" }: ProjectFormProps) => {
-  const [formData, setFormData] = useState({
-    title: initialData?.title || "",
-    description: initialData?.description || "",
-    image: initialData?.image || "",
-    technologies: initialData?.technologies?.join(", ") || "",
-    githubUrl: initialData?.githubUrl || "",
-    features: initialData?.features?.join("\n") || "",
+  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
+    initialData?.technologies || []
+  );
+  const [newTech, setNewTech] = useState("");
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: initialData?.title || "",
+      description: initialData?.description || "",
+      image: initialData?.image || "",
+      githubUrl: initialData?.githubUrl || "",
+      features: initialData?.features?.join("\n") || ""
+    }
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+    if (selectedTechnologies.length === 0) {
+      toast.error("Please add at least one technology");
+      return;
+    }
+
     const project = {
-      ...formData,
-      technologies: formData.technologies.split(",").map(tech => tech.trim()),
-      features: formData.features.split("\n").filter(feature => feature.trim()),
+      ...values,
+      technologies: selectedTechnologies,
+      features: values.features.split("\n").filter(feature => feature.trim())
     };
+
     onSubmit(project);
-    toast.success(`Project ${mode === "add" ? "added" : "updated"} successfully!`);
+  };
+
+  const addTechnology = (tech: string) => {
+    if (!tech.trim()) return;
+    if (selectedTechnologies.includes(tech.trim())) {
+      toast.error("Technology already added");
+      return;
+    }
+    setSelectedTechnologies([...selectedTechnologies, tech.trim()]);
+    setNewTech("");
+  };
+
+  const removeTechnology = (tech: string) => {
+    setSelectedTechnologies(selectedTechnologies.filter(t => t !== tech));
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <Input
-        placeholder="Project Title"
-        value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-        required
-      />
-      <Textarea
-        placeholder="Project Description"
-        value={formData.description}
-        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-        required
-      />
-      <Input
-        placeholder="Image URL"
-        value={formData.image}
-        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-        required
-      />
-      <Input
-        placeholder="Technologies (comma-separated)"
-        value={formData.technologies}
-        onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
-        required
-      />
-      <Input
-        placeholder="GitHub URL"
-        value={formData.githubUrl}
-        onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
-        required
-      />
-      <Textarea
-        placeholder="Features (one per line)"
-        value={formData.features}
-        onChange={(e) => setFormData({ ...formData, features: e.target.value })}
-        required
-      />
-      <Button type="submit" className="w-full">
-        {mode === "add" ? "Add Project" : "Update Project"}
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Project Title</FormLabel>
+              <FormControl>
+                <Input placeholder="My Awesome Project" {...field} />
+              </FormControl>
+              <FormDescription>
+                Give your project a clear and descriptive title
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="A brief description of your project..."
+                  className="min-h-[100px]"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Explain what your project does and why it's useful
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Project Image URL</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="https://example.com/image.jpg"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Provide a URL for your project's preview image. You can use image hosting services like imgur.com
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="space-y-2">
+          <Label>Technologies</Label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {selectedTechnologies.map((tech) => (
+              <Badge key={tech} variant="secondary" className="gap-1">
+                {tech}
+                <button
+                  type="button"
+                  onClick={() => removeTechnology(tech)}
+                  className="ml-1 hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <Input
+              value={newTech}
+              onChange={(e) => setNewTech(e.target.value)}
+              placeholder="Add a technology..."
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  addTechnology(newTech);
+                }
+              }}
+            />
+            <Button 
+              type="button"
+              variant="outline"
+              onClick={() => addTechnology(newTech)}
+            >
+              Add
+            </Button>
+          </div>
+          <div className="mt-2">
+            <p className="text-sm text-muted-foreground mb-2">Suggested technologies:</p>
+            <div className="flex flex-wrap gap-2">
+              {SUGGESTED_TECHNOLOGIES.map((tech) => (
+                <Badge
+                  key={tech}
+                  variant="outline"
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => addTechnology(tech)}
+                >
+                  {tech}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <FormField
+          control={form.control}
+          name="githubUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>GitHub URL</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="https://github.com/username/project"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Link to your project's GitHub repository
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="features"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Key Features</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="- Feature 1&#10;- Feature 2&#10;- Feature 3"
+                  className="min-h-[100px]"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                List the key features of your project, one per line
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="w-full">
+          {mode === "add" ? "Add Project" : "Update Project"}
+        </Button>
+      </form>
+    </Form>
   );
 };
