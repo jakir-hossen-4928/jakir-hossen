@@ -25,7 +25,7 @@ export const DashboardLayout = () => {
     return location.pathname === path;
   };
 
-  const NavLinks = () => (
+  const NavLinks = ({ showLabels = true }) => (
     <>
       {navigation.map((item) => {
         const Icon = item.icon;
@@ -41,7 +41,7 @@ export const DashboardLayout = () => {
             }`}
           >
             <Icon className="h-5 w-5" />
-            <span className="hidden md:inline">{item.name}</span>
+            {showLabels && <span>{item.name}</span>}
           </Link>
         );
       })}
@@ -68,7 +68,7 @@ export const DashboardLayout = () => {
             <h2 className="text-lg font-semibold text-primary">Admin Panel</h2>
           </div>
           <nav className="flex flex-col gap-1 p-4">
-            <NavLinks />
+            <NavLinks showLabels={true} />
           </nav>
         </SheetContent>
       </Sheet>
@@ -79,7 +79,7 @@ export const DashboardLayout = () => {
           <h2 className="text-2xl font-bold text-primary">Admin Panel</h2>
         </div>
         <nav className="flex-1 space-y-1 p-4">
-          <NavLinks />
+          <NavLinks showLabels={true} />
         </nav>
       </div>
 
