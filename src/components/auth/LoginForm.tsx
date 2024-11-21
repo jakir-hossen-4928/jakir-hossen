@@ -1,49 +1,35 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 export const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { signInWithGoogle, signInWithFacebook } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // For demo purposes, using hardcoded credentials
-    if (email === "admin@example.com" && password === "admin123") {
-      localStorage.setItem("isAuthenticated", "true");
-      toast.success("Login successful!");
-      navigate("/dashboard");
-    } else {
-      toast.error("Invalid credentials");
-    }
+  const handleGoogleLogin = async () => {
+    await signInWithGoogle();
+    navigate("/dashboard");
+  };
+
+  const handleFacebookLogin = async () => {
+    await signInWithFacebook();
+    navigate("/dashboard");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
-      <div className="space-y-2">
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
-      <div className="space-y-2">
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-      <Button type="submit" className="w-full">
-        Login
+    <div className="space-y-4 w-full max-w-sm">
+      <Button
+        onClick={handleGoogleLogin}
+        className="w-full bg-white text-black hover:bg-gray-100"
+      >
+        Sign in with Google
       </Button>
-    </form>
+      <Button
+        onClick={handleFacebookLogin}
+        className="w-full bg-[#1877f2] hover:bg-[#1865d3]"
+      >
+        Sign in with Facebook
+      </Button>
+    </div>
   );
 };
