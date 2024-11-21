@@ -14,8 +14,6 @@ import { LinkNode } from '@lexical/link';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { TableNode, TableCellNode, TableRowNode } from '@lexical/table';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
-import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
-import { CheckListNode } from '@lexical/list';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
 
 const theme = {
@@ -58,7 +56,6 @@ const editorConfig = {
     TableNode,
     TableCellNode,
     TableRowNode,
-    CheckListNode,
   ],
 };
 
@@ -90,7 +87,6 @@ export const RichTextEditor = ({ onChange, initialContent }: RichTextEditorProps
         <ListPlugin />
         <LinkPlugin />
         <TablePlugin />
-        <CheckListPlugin />
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
       </div>
     </LexicalComposer>

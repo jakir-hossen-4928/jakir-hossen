@@ -12,31 +12,50 @@ import {
   Code,
   Link,
   Table,
-  CheckSquare,
 } from 'lucide-react';
-import { FORMAT_TEXT_COMMAND, UNDO_COMMAND, REDO_COMMAND } from 'lexical';
+import { $createParagraphNode, $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from 'lexical';
 import {
   INSERT_ORDERED_LIST_COMMAND,
   INSERT_UNORDERED_LIST_COMMAND,
-  INSERT_CHECK_LIST_COMMAND,
 } from '@lexical/list';
-import { INSERT_QUOTE_COMMAND } from '@lexical/rich-text';
+import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
+import { $createLinkNode } from '@lexical/link';
+import { INSERT_TABLE_COMMAND } from '@lexical/table';
 
 const ToolbarPlugin = () => {
   const [editor] = useLexicalComposerContext();
 
   const formatHeading = (level: 1 | 2) => {
     editor.update(() => {
-      const selection = editor.getSelection();
-      if (selection) {
-        editor.update(() => {
-          const node = selection.getNodes()[0];
-          if (node) {
-            node.replace(`h${level}`);
-          }
-        });
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        const headingNode = $createHeadingNode(`h${level}`);
+        selection.insertNodes([headingNode]);
       }
     });
+  };
+
+  const insertQuote = () => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        const quoteNode = $createQuoteNode();
+        selection.insertNodes([quoteNode]);
+      }
+    });
+  };
+
+  const insertLink = () => {
+    const url = window.prompt('Enter URL');
+    if (url) {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          const linkNode = $createLinkNode(url);
+          selection.insertNodes([linkNode]);
+        }
+      });
+    }
   };
 
   return (
@@ -79,14 +98,7 @@ const ToolbarPlugin = () => {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined)}
-      >
-        <CheckSquare className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.dispatchCommand(INSERT_QUOTE_COMMAND, undefined)}
+        onClick={insertQuote}
       >
         <Quote className="h-4 w-4" />
       </Button>
@@ -114,24 +126,14 @@ const ToolbarPlugin = () => {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => {
-          const url = window.prompt('Enter URL');
-          if (url) {
-            editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'link');
-          }
-        }}
+        onClick={insertLink}
       >
         <Link className="h-4 w-4" />
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => {
-          editor.update(() => {
-            const table = editor.createNode('table');
-            editor.getSelection()?.insertNodes([table]);
-          });
-        }}
+        onClick={() => editor.dispatchCommand(INSERT_TABLE_COMMAND, undefined)}
       >
         <Table className="h-4 w-4" />
       </Button>
