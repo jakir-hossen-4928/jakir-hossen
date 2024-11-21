@@ -1,43 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProjectForm } from "@/components/dashboard/ProjectForm";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { projectsService } from "@/services/projects";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Dashboard = () => {
-  const [projects, setProjects] = useState([
-    {
-      title: "📚 Customized Vocabulary App for EPS Workers",
-      description: "A comprehensive Korean vocabulary book designed for EPS workers with features like pronunciation, offline favorites, and grammar images.",
-      image: "https://i.ibb.co/CbPBXV0/korea.jpg",
-      technologies: ["React Native", "JavaScript", "Google Translate API"],
-      githubUrl: "https://github.com/jakir-hossen-4928/eps-bangla-vocabulary-mobile-app",
-      features: [
-        "Listen to Korean Words",
-        "Offline Favorites",
-        "Grammar Images",
-        "Search Bar",
-        "Google Translation"
-      ]
-    },
-    {
-      title: "🌐 Icst-Hostel Management System",
-      description: "A comprehensive Hostel Management System designed for polytechnic students with student and admin dashboards.",
-      image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80",
-      technologies: ["React", "Tailwind CSS", "Appwrite", "Node.js", "MongoDB"],
-      githubUrl: "https://github.com/jakir-hossen-4928/Icst-Hostel",
-      features: [
-        "Student Dashboard",
-        "Admin Dashboard",
-        "Room Management",
-        "Fee Management",
-        "Notice Board"
-      ]
-    }
-  ]);
   const [editingProject, setEditingProject] = useState<any>(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data: projects = [], isLoading } = useQuery({
+    queryKey: ['projects'],
+    queryFn: projectsService.getAllProjects,
+  });
+
+  const addProjectMutation = useMutation({
+    mutationFn: projectsService.addProject,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast.success("Project added successfully!");
+    },
+    onError: (error) => {
+      toast.error("Failed to add project");
+      console.error(error);
+    },
+  });
+
+  const updateProjectMutation = useMutation({
+    mutationFn: ({ id, project }: { id: string; project: any }) => 
+      projectsService.updateProject(id, project),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      setEditingProject(null);
+      toast.success("Project updated successfully!");
+    },
+    onError: (error) => {
+      toast.error("Failed to update project");
+      console.error(error);
+    },
+  });
+
+  const deleteProjectMutation = useMutation({
+    mutationFn: projectsService.deleteProject,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast.success("Project deleted successfully!");
+    },
+    onError: (error) => {
+      toast.error("Failed to delete project");
+      console.error(error);
+    },
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
@@ -46,18 +62,22 @@ const Dashboard = () => {
   };
 
   const handleAddProject = (project: any) => {
-    setProjects([...projects, project]);
+    addProjectMutation.mutate(project);
   };
 
   const handleEditProject = (project: any) => {
-    setProjects(projects.map(p => p.title === editingProject.title ? project : p));
-    setEditingProject(null);
+    if (editingProject?.id) {
+      updateProjectMutation.mutate({ id: editingProject.id, project });
+    }
   };
 
-  const handleDeleteProject = (projectTitle: string) => {
-    setProjects(projects.filter(p => p.title !== projectTitle));
-    toast.success("Project deleted successfully!");
+  const handleDeleteProject = (projectId: string) => {
+    deleteProjectMutation.mutate(projectId);
   };
+
+  if (isLoading) {
+    return <div className="container mx-auto px-4 py-8">Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -80,8 +100,8 @@ const Dashboard = () => {
 
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold">Your Projects</h2>
-          {projects.map((project) => (
-            <div key={project.title} className="relative">
+          {projects.map((project: any) => (
+            <div key={project.$id} className="relative">
               <ProjectCard {...project} />
               <div className="absolute top-4 right-4 space-x-2">
                 <Button
@@ -93,7 +113,7 @@ const Dashboard = () => {
                 <Button
                   size="sm"
                   variant="destructive"
-                  onClick={() => handleDeleteProject(project.title)}
+                  onClick={() => handleDeleteProject(project.$id)}
                 >
                   Delete
                 </Button>
