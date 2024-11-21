@@ -1,6 +1,6 @@
-import { Github, Mail, Moon, Sun } from "lucide-react";
+import { Github, Mail } from "lucide-react";
 import { Button } from "./ui/button";
-import { useTheme } from "@/components/theme-provider";
+import { useNavigate } from "react-router-dom";
 
 const TECH_BADGES = [
   {
@@ -50,17 +50,16 @@ const TECH_BADGES = [
 ];
 
 export const Hero = () => {
-  const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
 
   return (
     <section className="min-h-[90vh] flex flex-col justify-center items-center max-w-5xl mx-auto px-6 animate-fade-up relative pt-20">
       <div className="absolute top-4 right-4">
         <Button
           variant="outline"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onClick={() => navigate("/login")}
         >
-          {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          Dashboard Login
         </Button>
       </div>
       
