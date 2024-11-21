@@ -9,6 +9,9 @@ import { ListItemNode, ListNode } from '@lexical/list';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { TRANSFORMERS } from '@lexical/markdown';
+import { CodeNode } from '@lexical/code';
+import { LinkNode } from '@lexical/link';
+import { TableNode, TableCellNode, TableRowNode } from '@lexical/table';
 
 const theme = {
   paragraph: 'mb-2',
@@ -25,11 +28,22 @@ const theme = {
 };
 
 const editorConfig = {
+  namespace: 'MyEditor',
   theme,
   onError(error: Error) {
     console.error(error);
   },
-  nodes: [HeadingNode, QuoteNode, ListItemNode, ListNode],
+  nodes: [
+    HeadingNode,
+    QuoteNode,
+    ListItemNode,
+    ListNode,
+    CodeNode,
+    LinkNode,
+    TableNode,
+    TableCellNode,
+    TableRowNode
+  ],
 };
 
 interface RichTextEditorProps {
