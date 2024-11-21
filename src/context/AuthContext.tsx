@@ -8,7 +8,7 @@ import {
   FacebookAuthProvider
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db, googleProvider, facebookProvider } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { toast } from "sonner";
 
 interface AuthContextType {
@@ -45,13 +45,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email: user.email,
       photoURL: user.photoURL,
       displayName: user.displayName,
-      isAdmin: user.email === "your-admin-email@example.com" // Replace with your admin email
+      isAdmin: user.email === "mdjakirkhan4928@gmail.com", // Replace with your admin email
+      createdAt: new Date().toISOString(),
     }, { merge: true });
   };
 
   const signInWithGoogle = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
       await saveUserToFirestore(result.user);
       toast.success("Successfully signed in with Google!");
     } catch (error) {
@@ -61,7 +63,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithFacebook = async () => {
     try {
-      const result = await signInWithPopup(auth, facebookProvider);
+      const provider = new FacebookAuthProvider();
+      const result = await signInWithPopup(auth, provider);
       await saveUserToFirestore(result.user);
       toast.success("Successfully signed in with Facebook!");
     } catch (error) {

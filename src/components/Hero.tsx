@@ -1,6 +1,7 @@
 import { Github, Mail } from "lucide-react";
 import { Button } from "./ui/button";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { LoginModal } from "./auth/LoginModal";
 
 const TECH_BADGES = [
   {
@@ -50,18 +51,23 @@ const TECH_BADGES = [
 ];
 
 export const Hero = () => {
-  const navigate = useNavigate();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
     <section className="min-h-[90vh] flex flex-col justify-center items-center max-w-5xl mx-auto px-6 animate-fade-up relative pt-20">
       <div className="absolute top-4 right-4">
         <Button
           variant="outline"
-          onClick={() => navigate("/login")}
+          onClick={() => setIsLoginModalOpen(true)}
         >
           Dashboard Login
         </Button>
       </div>
+      
+      <LoginModal 
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
       
       <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
         <img 
