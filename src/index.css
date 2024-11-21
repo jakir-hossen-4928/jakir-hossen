@@ -5,15 +5,67 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
   body {
-    @apply bg-[#1A1F2C] text-white font-sans;
+    @apply bg-[#1A1F2C] text-white font-sans transition-colors duration-300;
   }
 }
 
 .glass-card {
-  @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg;
+  @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg transition-all duration-300;
 }
 
 .hover-card {
   @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20;
+}
+
+.dark .glass-card {
+  @apply bg-black/20 border-white/5;
+}
+
+.light .glass-card {
+  @apply bg-white/80 border-black/5;
+}
+
+.dark .hover-card:hover {
+  @apply shadow-primary/30;
+}
+
+.light .hover-card:hover {
+  @apply shadow-primary/10;
+}
+
+.theme-transition {
+  @apply transition-all duration-300;
 }
