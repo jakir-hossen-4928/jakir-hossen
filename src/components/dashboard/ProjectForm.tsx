@@ -7,6 +7,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TechnologyInput } from "./project-form/TechnologyInput";
 import { useState } from "react";
+import { toast } from "sonner"; // Add this import for toast notifications
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
