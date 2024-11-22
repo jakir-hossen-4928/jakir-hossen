@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import {
   LayoutDashboard,
   Users,
@@ -8,6 +9,7 @@ import {
   FolderKanban,
   Menu,
   BookOpen,
+  LogOut,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
@@ -22,14 +24,10 @@ const navigation = [
 export const DashboardLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { logout } = useAuth();
 
   const isCurrentPath = (path: string) => {
     return location.pathname === path;
-  };
-
-  const getCurrentPageName = () => {
-    const currentRoute = navigation.find(item => isCurrentPath(item.href));
-    return currentRoute ? currentRoute.name : "";
   };
 
   const NavLinks = ({ showLabels = true }) => (
@@ -67,9 +65,14 @@ export const DashboardLayout = () => {
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle menu</span>
         </Button>
-        <h2 className="text-lg font-semibold text-primary">
-          {getCurrentPageName()}
-        </h2>
+        <Button
+          variant="ghost"
+          onClick={logout}
+          className="flex items-center gap-2"
+        >
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
+        </Button>
       </div>
 
       {/* Mobile Navigation */}
