@@ -1,26 +1,32 @@
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, Reply, ThumbsUp as ThumbsUpIcon } from "lucide-react";
+import { User, ThumbsUp as ThumbsUpIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Comment } from "@/types/blog";
 
 interface BlogCommentsProps {
   comments: Comment[];
   onAddComment: (text: string) => void;
-  onAddReply: (commentId: string, text: string) => void;
   onLikeComment: (commentId: string) => void;
 }
 
 export const BlogComments = ({
   comments,
   onAddComment,
-  onAddReply,
   onLikeComment,
 }: BlogCommentsProps) => {
   const [newComment, setNewComment] = useState("");
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [replyText, setReplyText] = useState("");
+  const [mentionInput, setMentionInput] = useState("");
+  const [showMentions, setShowMentions] = useState(false);
+
+  // Mock users for mention functionality
+  const users = [
+    { id: "1", name: "John Doe" },
+    { id: "2", name: "Jane Smith" },
+    { id: "3", name: "Alice Johnson" }
+  ];
 
   const handleAddComment = () => {
     if (!newComment.trim()) {
@@ -31,19 +37,29 @@ export const BlogComments = ({
     setNewComment("");
   };
 
-  const handleAddReply = (commentId: string) => {
-    if (!replyText.trim()) {
-      toast.error("Please enter a reply");
-      return;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewComment(value);
+
+    // Check for @ symbol to show mentions
+    if (value.includes("@")) {
+      const mentionQuery = value.split("@").pop() || "";
+      setMentionInput(mentionQuery);
+      setShowMentions(true);
+    } else {
+      setShowMentions(false);
     }
-    onAddReply(commentId, replyText);
-    setReplyText("");
-    setReplyingTo(null);
   };
 
-  const renderComment = (comment: Comment, isReply = false) => (
-    <div key={comment.id} className={`flex flex-col md:flex-row gap-3 p-4 rounded-lg ${isReply ? 'ml-4 md:ml-12 bg-accent/5' : 'bg-accent/10'}`}>
-      <div className="flex items-start gap-3">
+  const handleMention = (username: string) => {
+    const commentWithoutCurrentMention = newComment.split("@")[0];
+    setNewComment(`${commentWithoutCurrentMention}@${username} `);
+    setShowMentions(false);
+  };
+
+  const renderComment = (comment: Comment) => (
+    <div key={comment.id} className="flex flex-col md:flex-row gap-3 p-4 rounded-lg bg-accent/10 animate-fade-in">
+      <div className="flex items-start gap-3 w-full">
         <Avatar className="h-10 w-10">
           <AvatarImage src={comment.authorImage} />
           <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
@@ -54,7 +70,7 @@ export const BlogComments = ({
             <span className="text-xs text-muted-foreground">{comment.date}</span>
           </div>
           <p className="mt-1 break-words">{comment.text}</p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-2">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -64,33 +80,7 @@ export const BlogComments = ({
               <ThumbsUpIcon className="h-4 w-4 mr-2" />
               {comment.likes} {comment.likes === 1 ? 'Like' : 'Likes'}
             </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setReplyingTo(comment.id)}
-            >
-              <Reply className="h-4 w-4 mr-2" />
-              Reply
-            </Button>
           </div>
-          
-          {replyingTo === comment.id && (
-            <div className="mt-3 flex flex-col md:flex-row gap-2">
-              <Input
-                placeholder="Write a reply..."
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                className="flex-1"
-              />
-              <Button onClick={() => handleAddReply(comment.id)}>Reply</Button>
-            </div>
-          )}
-
-          {comment.replies.length > 0 && (
-            <div className="mt-4 space-y-4">
-              {comment.replies.map(reply => renderComment(reply, true))}
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -103,14 +93,32 @@ export const BlogComments = ({
           <AvatarImage src="https://api.dicebear.com/7.x/avatars/svg?seed=current" />
           <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
         </Avatar>
-        <div className="flex-1 flex flex-col md:flex-row gap-2">
+        <div className="flex-1 flex flex-col md:flex-row gap-2 relative">
           <Input
-            placeholder="Write a comment..."
+            placeholder="Write a comment... Use @ to mention users"
             value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
+            onChange={handleInputChange}
             className="flex-1"
           />
           <Button onClick={handleAddComment}>Comment</Button>
+          
+          {showMentions && (
+            <div className="absolute top-full left-0 mt-1 w-full bg-background border rounded-md shadow-lg z-10">
+              {users
+                .filter(user => 
+                  user.name.toLowerCase().includes(mentionInput.toLowerCase())
+                )
+                .map(user => (
+                  <button
+                    key={user.id}
+                    className="w-full text-left px-4 py-2 hover:bg-accent/10 transition-colors"
+                    onClick={() => handleMention(user.name)}
+                  >
+                    {user.name}
+                  </button>
+                ))}
+            </div>
+          )}
         </div>
       </div>
 
