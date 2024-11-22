@@ -73,7 +73,7 @@ export const Hero = () => {
   };
 
   return (
-    <section className="min-h-[90vh] flex flex-col justify-center items-center max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-up relative pt-20">
+    <section className="min-h-screen py-20 flex flex-col justify-center items-center relative">
       <div className="absolute top-4 right-4 z-10">
         {user ? (
           <DropdownMenu>
@@ -115,64 +115,66 @@ export const Hero = () => {
         onClose={() => setIsLoginModalOpen(false)}
       />
       
-      <div className="flex flex-col lg:flex-row items-center gap-8 mb-8 w-full">
-        <div className="w-full lg:w-1/3 flex justify-center">
-          <img 
-            src="https://i.ibb.co/Xb5q8JS/photo-1.jpg" 
-            alt="Jakir Hossen"
-            className="w-48 h-48 rounded-full object-cover border-4 border-primary mt-8 shadow-lg hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-        <div className="w-full lg:w-2/3 text-center lg:text-left space-y-6">
-          <div className="mb-4">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col lg:flex-row items-center gap-12 mb-12">
+          <div className="w-full lg:w-1/3 flex justify-center">
             <img 
-              src="https://komarev.com/ghpvc/?username=jakir-hossen-4928&color=red" 
-              alt="Profile views" 
-              className="mx-auto lg:mx-0"
+              src="https://i.ibb.co/Xb5q8JS/photo-1.jpg" 
+              alt="Jakir Hossen"
+              className="w-48 h-48 rounded-full object-cover border-4 border-primary shadow-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
-            Hi 👋, I'm <span className="text-primary">Jakir Hossen</span>
-          </h1>
-          <h2 className="text-xl sm:text-2xl text-muted-foreground mb-4">
-            Web Developer | App Developer (Learner)
-          </h2>
-          <p className="text-lg text-muted-foreground mb-6">
-            🌱 Currently learning React Native App Development
-          </p>
-          <ul className="text-muted-foreground space-y-2 mb-6">
-            <li>👨‍💻 All projects available at <a href="https://github.com/jakir-hossen-4928?tab=repositories" className="text-primary hover:underline">my GitHub</a></li>
-            <li>💬 Ask me about HTML5, CSS3, JS, Bootstrap, Appwrite</li>
-            <li>📫 Reach me at mdjakirkhan4928@gmail.com</li>
-          </ul>
+          <div className="w-full lg:w-2/3 text-center lg:text-left space-y-6">
+            <div>
+              <img 
+                src="https://komarev.com/ghpvc/?username=jakir-hossen-4928&color=red" 
+                alt="Profile views" 
+                className="mx-auto lg:mx-0 mb-4"
+              />
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
+              Hi 👋, I'm <span className="text-primary">Jakir Hossen</span>
+            </h1>
+            <h2 className="text-xl sm:text-2xl text-muted-foreground">
+              Web Developer | App Developer (Learner)
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              🌱 Currently learning React Native App Development
+            </p>
+            <ul className="text-muted-foreground space-y-2">
+              <li>👨‍💻 All projects available at <a href="https://github.com/jakir-hossen-4928?tab=repositories" className="text-primary hover:underline">my GitHub</a></li>
+              <li>💬 Ask me about HTML5, CSS3, JS, Bootstrap, Appwrite</li>
+              <li>📫 Reach me at mdjakirkhan4928@gmail.com</li>
+            </ul>
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-wrap justify-center gap-4 mb-8">
-        <Button className="flex items-center gap-2 hover:scale-105 transition-transform" asChild>
-          <a href="mailto:mdjakirkhan4928@gmail.com">
-            <Mail size={20} />
-            Contact Me
-          </a>
-        </Button>
-        <Button variant="outline" className="flex items-center gap-2 hover:scale-105 transition-transform" asChild>
-          <a href="https://github.com/jakir-hossen-4928" target="_blank" rel="noopener noreferrer">
-            <Github size={20} />
-            GitHub
-          </a>
-        </Button>
-      </div>
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <Button className="flex items-center gap-2 hover:scale-105 transition-transform" asChild>
+            <a href="mailto:mdjakirkhan4928@gmail.com">
+              <Mail size={20} />
+              Contact Me
+            </a>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2 hover:scale-105 transition-transform" asChild>
+            <a href="https://github.com/jakir-hossen-4928" target="_blank" rel="noopener noreferrer">
+              <Github size={20} />
+              GitHub
+            </a>
+          </Button>
+        </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-4xl px-4">
-        {TECH_BADGES.map((tech) => (
-          <img 
-            key={tech.name}
-            src={tech.image}
-            alt={tech.name}
-            className="h-8 cursor-pointer hover:scale-105 transition-transform"
-            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-          />
-        ))}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 max-w-4xl mx-auto">
+          {TECH_BADGES.map((tech) => (
+            <img 
+              key={tech.name}
+              src={tech.image}
+              alt={tech.name}
+              className="h-8 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
