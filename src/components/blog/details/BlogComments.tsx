@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, Reply } from "lucide-react";
+import { User, Reply, ThumbsUp as ThumbsUpIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Comment } from "@/types/blog";
 
@@ -61,7 +61,7 @@ export const BlogComments = ({
             onClick={() => onLikeComment(comment.id)}
             className={comment.isLiked ? 'text-primary' : ''}
           >
-            <ThumbsUp className="h-4 w-4 mr-2" />
+            <ThumbsUpIcon className="h-4 w-4 mr-2" />
             {comment.likes} {comment.likes === 1 ? 'Like' : 'Likes'}
           </Button>
           <Button 
