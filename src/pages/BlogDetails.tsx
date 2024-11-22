@@ -1,6 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Heart, MessageCircle, Share2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -37,7 +35,18 @@ const BlogDetails = () => {
       author: "John Doe",
       authorImage: "https://api.dicebear.com/7.x/avatars/svg?seed=john",
       category: "Web Development",
-      comments: [],
+      comments: [
+        {
+          id: "1",
+          text: "This is a great article! Very informative.",
+          author: "Jane Smith",
+          authorImage: "https://api.dicebear.com/7.x/avatars/svg?seed=jane",
+          date: "March 16, 2024",
+          likes: 5,
+          replies: [],
+          isLiked: false
+        }
+      ],
       isLiked: false,
       likesCount: 42
     }),
@@ -98,17 +107,7 @@ const BlogDetails = () => {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleClose}
-              className="h-8 w-8"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            Blog Details
-          </DialogTitle>
+          <DialogTitle className="text-xl font-semibold">Blog Details</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6 px-4 md:px-6">
