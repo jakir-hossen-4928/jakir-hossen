@@ -10,6 +10,7 @@ import {
   Menu,
   BookOpen,
   LogOut,
+  Robot,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
@@ -19,6 +20,7 @@ const navigation = [
   { name: "Blog", href: "/admin/blog", icon: FileText },
   { name: "Users", href: "/admin/users", icon: Users },
   { name: "Books", href: "/admin/books", icon: BookOpen },
+  { name: "AI Tools", href: "/admin/ai-tools", icon: Robot },
 ];
 
 export const DashboardLayout = () => {

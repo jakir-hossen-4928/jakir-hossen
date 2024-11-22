@@ -14,9 +14,11 @@ import AdminProjects from "./pages/AdminProjects";
 import AdminBlog from "./pages/AdminBlog";
 import AdminUsers from "./pages/AdminUsers";
 import AdminBooks from "./pages/AdminBooks";
+import AdminAITools from "./pages/AdminAITools";
 import UserDashboard from "./pages/user/UserDashboard";
 import UserBlogs from "./pages/user/UserBlogs";
 import UserBooks from "./pages/user/UserBooks";
+import UserAITools from "./pages/user/UserAITools";
 import CreateBlog from "./pages/user/CreateBlog";
 import BlogDetails from "./pages/BlogDetails";
 
@@ -39,11 +41,13 @@ const App = () => (
                 <Route path="/admin/blog" element={<AdminBlog />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/admin/books" element={<AdminBooks />} />
+                <Route path="/admin/ai-tools" element={<AdminAITools />} />
               </Route>
               <Route element={<UserDashboardLayout />}>
                 <Route path="/user" element={<UserDashboard />} />
                 <Route path="/user/blogs" element={<UserBlogs />} />
                 <Route path="/user/books" element={<UserBooks />} />
+                <Route path="/user/ai-tools" element={<UserAITools />} />
                 <Route path="/user/create-blog" element={<CreateBlog />} />
               </Route>
             </Routes>
