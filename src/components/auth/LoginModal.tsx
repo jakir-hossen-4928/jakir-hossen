@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { Github } from "lucide-react";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -9,15 +8,10 @@ interface LoginModalProps {
 }
 
 export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
-  const { signInWithGoogle, signInWithFacebook } = useAuth();
+  const { signInWithGoogle } = useAuth();
 
   const handleGoogleLogin = async () => {
     await signInWithGoogle();
-    onClose();
-  };
-
-  const handleFacebookLogin = async () => {
-    await signInWithFacebook();
     onClose();
   };
 
@@ -30,17 +24,12 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
         <div className="flex flex-col space-y-4 p-6">
           <Button
             onClick={handleGoogleLogin}
-            className="w-full bg-white text-black hover:bg-gray-100 flex items-center justify-center gap-2"
+            className="w-full bg-white text-black hover:bg-gray-100"
           >
-            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-            Sign in with Google
-          </Button>
-          <Button
-            onClick={handleFacebookLogin}
-            className="w-full bg-[#1877f2] hover:bg-[#1865d3] flex items-center justify-center gap-2"
-          >
-            <img src="https://www.facebook.com/favicon.ico" alt="Facebook" className="w-5 h-5" />
-            Sign in with Facebook
+            <div className="flex flex-col items-center w-full md:flex-row md:justify-center md:gap-2">
+              <img src="https://www.google.com/favicon.ico" alt="Google" className="w-6 h-6 mb-2 md:mb-0" />
+              <span>Sign in with Google</span>
+            </div>
           </Button>
         </div>
       </DialogContent>

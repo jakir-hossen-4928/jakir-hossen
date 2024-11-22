@@ -1,7 +1,15 @@
-import { Github, Mail } from "lucide-react";
+import { Github, Mail, LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { LoginModal } from "./auth/LoginModal";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const TECH_BADGES = [
   {
@@ -52,16 +60,54 @@ const TECH_BADGES = [
 
 export const Hero = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { user, logout, isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
+
+  const getDashboardPath = () => {
+    return isAdmin ? "/admin" : "/user";
+  };
 
   return (
     <section className="min-h-[90vh] flex flex-col justify-center items-center max-w-5xl mx-auto px-6 animate-fade-up relative pt-20">
       <div className="absolute top-4 right-4">
-        <Button
-          variant="outline"
-          onClick={() => setIsLoginModalOpen(true)}
-        >
-          Dashboard Login
-        </Button>
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                {user.photoURL ? (
+                  <img
+                    src={user.photoURL}
+                    alt={user.displayName || "User"}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className="h-6 w-6" />
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigate(getDashboardPath())}>
+                Dashboard
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button
+            variant="outline"
+            onClick={() => setIsLoginModalOpen(true)}
+          >
+            Dashboard Login
+          </Button>
+        )}
       </div>
       
       <LoginModal 
