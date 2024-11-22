@@ -159,10 +159,15 @@ const CreateBlog = () => {
                   'undo', 'redo', '|',
                   'hr', 'eraser', 'fullsize',
                 ],
-                uploader: {
-                  insertImageAsBase64URI: true
-                },
+                enableDragAndDropFileToEditor: true,
+                askBeforePasteHTML: false,
+                askBeforePasteFromWord: false,
+                defaultActionOnPaste: 'insert_clear_html',
                 removeButtons: ['about'],
+                showXPathInStatusbar: false,
+                showCharsCounter: false,
+                showWordsCounter: false,
+                toolbarAdaptive: false,
               }}
             />
           </div>
