@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { BlogHeader } from "@/components/blog/details/BlogHeader";
+import { BlogContent } from "@/components/blog/details/BlogContent";
+import { BlogActions } from "@/components/blog/details/BlogActions";
+import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, ThumbsUp, Share2, User, Reply } from "lucide-react";
-import { toast } from "sonner";
 
 interface Comment {
   id: string;
@@ -22,7 +24,7 @@ const BlogDetails = () => {
   const [newComment, setNewComment] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
-  
+
   const [blog, setBlog] = useState({
     id: "1",
     title: "Getting Started with React and TypeScript",
@@ -34,7 +36,35 @@ const BlogDetails = () => {
     category: "Development",
     tags: ["React", "TypeScript", "Web Development"],
     comments: [] as Comment[],
+    isLiked: false,
+    likesCount: 0,
   });
+
+  const handleShare = () => {
+    // Share functionality
+    navigator.share?.({
+      title: blog.title,
+      text: blog.content.substring(0, 100),
+      url: window.location.href,
+    }).catch(() => {
+      // Fallback if Web Share API is not available
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard!");
+    });
+  };
+
+  const handleLike = () => {
+    setBlog(prev => ({
+      ...prev,
+      isLiked: !prev.isLiked,
+      likesCount: prev.isLiked ? prev.likesCount - 1 : prev.likesCount + 1
+    }));
+  };
+
+  const handleComment = () => {
+    // Scroll to comments section
+    document.getElementById("comments")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleAddComment = () => {
     if (!newComment.trim()) {
@@ -168,91 +198,53 @@ const BlogDetails = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="space-y-8">
-        <div className="relative h-[400px] w-full overflow-hidden rounded-lg">
-          <img
-            src={blog.coverImage}
-            alt={blog.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute top-4 right-4">
-            <span className="bg-primary/80 text-white px-3 py-1 rounded-full text-sm">
-              {blog.category}
-            </span>
+    <div className="container max-w-4xl mx-auto px-4 py-8">
+      <Card className="p-6 md:p-8 space-y-8 glass-card hover-card">
+        <BlogHeader
+          title={blog.title}
+          author={blog.author}
+          authorImage={blog.authorImage}
+          date={blog.date}
+          category={blog.category}
+          onShare={handleShare}
+        />
+
+        <BlogContent
+          content={blog.content}
+          coverImage={blog.coverImage}
+        />
+
+        <BlogActions
+          onLike={handleLike}
+          onComment={handleComment}
+          onShare={handleShare}
+          isLiked={blog.isLiked}
+          likesCount={blog.likesCount}
+          commentsCount={blog.comments.length}
+        />
+      </Card>
+
+      <div id="comments" className="mt-8">
+        <div className="flex gap-3">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="https://api.dicebear.com/7.x/avatars/svg?seed=current" />
+            <AvatarFallback>
+              <User className="h-4 w-4" />
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 flex gap-2">
+            <Input
+              placeholder="Write a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="flex-1"
+            />
+            <Button onClick={handleAddComment}>Comment</Button>
           </div>
         </div>
 
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold">{blog.title}</h1>
-          <div className="flex items-center gap-4">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={blog.authorImage} />
-              <AvatarFallback>
-                <User className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="font-medium">{blog.author}</div>
-              <div className="text-sm text-muted-foreground">{blog.date}</div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {blog.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-accent/10 text-accent px-2 py-1 rounded-full text-xs"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          <div className="prose prose-lg dark:prose-invert max-w-none" 
-               dangerouslySetInnerHTML={{ __html: blog.content }} 
-          />
-
-          <div className="flex items-center gap-4 py-4 border-t border-b">
-            <Button variant="ghost">
-              <ThumbsUp className="h-4 w-4 mr-2" />
-              Like
-            </Button>
-            <Button variant="ghost">
-              <MessageCircle className="h-4 w-4 mr-2" />
-              Comment
-            </Button>
-            <Button variant="ghost">
-              <Share2 className="h-4 w-4 mr-2" />
-              Share
-            </Button>
-          </div>
-
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Comments</h2>
-            
-            <div className="flex gap-3">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://api.dicebear.com/7.x/avatars/svg?seed=current" />
-                <AvatarFallback>
-                  <User className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 flex gap-2">
-                <Input
-                  placeholder="Write a comment..."
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  className="flex-1"
-                />
-                <Button onClick={handleAddComment}>Comment</Button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {blog.comments.map(comment => renderComment(comment))}
-            </div>
-          </div>
+          {blog.comments.map(comment => renderComment(comment))}
         </div>
       </div>
     </div>
