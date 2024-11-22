@@ -22,9 +22,11 @@ export const BlogHeader = ({
 }: BlogHeaderProps) => {
   return (
     <div className="space-y-4 animate-fade-in">
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{title}</h1>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight leading-tight">
+        {title}
+      </h1>
       
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Avatar className="h-10 w-10 border-2 border-primary/20">
             <AvatarImage src={authorImage} />
@@ -38,11 +40,11 @@ export const BlogHeader = ({
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <Badge variant="secondary" className="rounded-full">
             {category}
           </Badge>
-          <Button variant="ghost" size="icon" onClick={onShare}>
+          <Button variant="ghost" size="icon" onClick={onShare} className="ml-auto sm:ml-0">
             <Share2 className="h-4 w-4" />
           </Button>
         </div>
