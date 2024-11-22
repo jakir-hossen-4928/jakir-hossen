@@ -30,10 +30,6 @@ export const BlogCard = ({
 }: BlogCardProps) => {
   const navigate = useNavigate();
 
-  const truncatedDescription = description.length > 100 
-    ? description.substring(0, 100) + "..."
-    : description;
-
   const handleCardClick = () => {
     navigate(`/blog/${id}`);
   };
@@ -83,7 +79,7 @@ export const BlogCard = ({
 
       <CardContent>
         <p className="text-muted-foreground line-clamp-2 mb-4">
-          {truncatedDescription}
+          {description}
         </p>
         
         <div className="flex flex-wrap gap-2 mb-4">
@@ -97,20 +93,14 @@ export const BlogCard = ({
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm">
-            <ThumbsUp className="h-4 w-4 mr-2" />
-            Like
-          </Button>
-          <Button variant="ghost" size="sm">
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Comment
-          </Button>
-          <Button variant="ghost" size="sm">
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
-        </div>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="w-full"
+          onClick={handleCardClick}
+        >
+          Read More
+        </Button>
       </CardContent>
     </Card>
   );
