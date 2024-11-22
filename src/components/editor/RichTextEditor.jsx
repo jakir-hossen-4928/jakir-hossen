@@ -42,7 +42,7 @@ const theme = {
 const editorConfig = {
   namespace: 'MyEditor',
   theme,
-  onError(error: Error) {
+  onError(error) {
     console.error(error);
   },
   nodes: [
