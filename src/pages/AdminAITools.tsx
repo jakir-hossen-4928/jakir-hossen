@@ -20,7 +20,6 @@ const AdminAITools = () => {
   const [editingTool, setEditingTool] = useState<AITool | null>(null);
   const queryClient = useQueryClient();
 
-  // Mock data - replace with actual API calls
   const { data: tools = [], isLoading } = useQuery({
     queryKey: ['ai-tools'],
     queryFn: () => Promise.resolve([]), // Replace with actual API call
@@ -29,7 +28,6 @@ const AdminAITools = () => {
   const addToolMutation = useMutation({
     mutationFn: (tool: Omit<AITool, "id">) => {
       console.log("Adding new AI tool:", tool);
-      // Replace with actual API call
       return Promise.resolve({ ...tool, id: Date.now().toString() });
     },
     onSuccess: () => {
@@ -42,7 +40,6 @@ const AdminAITools = () => {
   const updateToolMutation = useMutation({
     mutationFn: (tool: AITool) => {
       console.log("Updating AI tool:", tool);
-      // Replace with actual API call
       return Promise.resolve(tool);
     },
     onSuccess: () => {
@@ -55,7 +52,6 @@ const AdminAITools = () => {
   const deleteToolMutation = useMutation({
     mutationFn: (id: string) => {
       console.log("Deleting AI tool:", id);
-      // Replace with actual API call
       return Promise.resolve();
     },
     onSuccess: () => {
