@@ -90,6 +90,16 @@ export const UserDashboardLayout = () => {
         <nav className="flex-1 space-y-1 p-4">
           <NavLinks showLabels={true} />
         </nav>
+        <div className="p-4 border-t">
+          <Button
+            variant="ghost"
+            onClick={logout}
+            className="w-full flex items-center gap-2 justify-center"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Logout</span>
+          </Button>
+        </div>
       </div>
 
       <div className="lg:pl-64 min-h-screen pt-14 lg:pt-0">
