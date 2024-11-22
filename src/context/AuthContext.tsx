@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { toast } from "sonner";
 
@@ -18,6 +18,8 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   signInWithFacebook: () => Promise<void>;
   logout: () => Promise<void>;
+  updateUserProfile: (data: any) => Promise<void>;
+  deleteUserAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -41,13 +43,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const saveUserToFirestore = async (user: User) => {
-    await setDoc(doc(db, "users", user.uid), {
+    const userRef = doc(db, "users", user.uid);
+    const userData = {
       email: user.email,
       photoURL: user.photoURL,
       displayName: user.displayName,
-      isAdmin: user.email === "mdjakirkhan4928@gmail.com", // Replace with your admin email
+      isAdmin: user.email === "mdjakirkhan4928@gmail.com",
       createdAt: new Date().toISOString(),
-    }, { merge: true });
+      lastLogin: new Date().toISOString(),
+      uid: user.uid,
+    };
+
+    try {
+      await setDoc(userRef, userData, { merge: true });
+    } catch (error) {
+      console.error("Error saving user data:", error);
+      throw error;
+    }
   };
 
   const signInWithGoogle = async () => {
@@ -58,6 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       toast.success("Successfully signed in with Google!");
     } catch (error) {
       toast.error("Failed to sign in with Google");
+      throw error;
     }
   };
 
@@ -69,15 +82,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       toast.success("Successfully signed in with Facebook!");
     } catch (error) {
       toast.error("Failed to sign in with Facebook");
+      throw error;
+    }
+  };
+
+  const updateUserProfile = async (data: any) => {
+    if (!user) throw new Error("No user logged in");
+    
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        ...data,
+        updatedAt: new Date().toISOString()
+      });
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update profile");
+      throw error;
+    }
+  };
+
+  const deleteUserAccount = async () => {
+    if (!user) throw new Error("No user logged in");
+    
+    try {
+      await deleteDoc(doc(db, "users", user.uid));
+      await user.delete();
+      toast.success("Account deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete account");
+      throw error;
     }
   };
 
   const logout = async () => {
     try {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+          lastLogout: new Date().toISOString()
+        });
+      }
       await signOut(auth);
       toast.success("Successfully logged out!");
     } catch (error) {
       toast.error("Failed to log out");
+      throw error;
     }
   };
 
@@ -88,7 +138,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       isAdmin,
       signInWithGoogle, 
       signInWithFacebook, 
-      logout 
+      logout,
+      updateUserProfile,
+      deleteUserAccount
     }}>
       {children}
     </AuthContext.Provider>
