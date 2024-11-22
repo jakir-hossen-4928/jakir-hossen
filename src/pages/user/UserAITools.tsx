@@ -1,20 +1,31 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot } from "lucide-react";
+import { AIToolCard } from "@/components/ai-tools/AIToolCard";
 import { useQuery } from "@tanstack/react-query";
+import { AITool } from "@/types/aiTools";
 
-interface AITool {
-  id: string;
-  name: string;
-  description: string;
-  url: string;
-  category: string;
-  imageUrl: string;
-}
+// Mock data - replace with actual API call
+const mockTools: AITool[] = [
+  {
+    id: "1",
+    name: "ChatGPT",
+    description: "Advanced language model for natural conversations and text generation",
+    logoUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
+    websiteUrl: "https://chat.openai.com",
+    category: "Text Generation"
+  },
+  {
+    id: "2",
+    name: "DALL-E",
+    description: "AI system that creates realistic images and art from natural language descriptions",
+    logoUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
+    websiteUrl: "https://openai.com/dall-e-2",
+    category: "Image Generation"
+  }
+];
 
 const UserAITools = () => {
   const { data: tools = [], isLoading } = useQuery({
     queryKey: ['ai-tools'],
-    queryFn: () => Promise.resolve([]), // Replace with actual API call
+    queryFn: () => Promise.resolve(mockTools), // Replace with actual API call
   });
 
   if (isLoading) {
@@ -26,26 +37,8 @@ const UserAITools = () => {
       <h1 className="text-3xl font-bold">AI Tools</h1>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool: AITool) => (
-          <Card key={tool.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader className="space-y-0 pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Bot className="h-5 w-5" />
-                {tool.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">{tool.description}</p>
-              <a
-                href={tool.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Try it out
-              </a>
-            </CardContent>
-          </Card>
+        {tools.map((tool) => (
+          <AIToolCard key={tool.id} tool={tool} />
         ))}
       </div>
     </div>

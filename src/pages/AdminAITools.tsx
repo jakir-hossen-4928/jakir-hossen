@@ -1,11 +1,32 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash, Bot } from "lucide-react";
-import { AIToolForm } from "@/components/dashboard/AIToolForm";
+import { Plus, Bot } from "lucide-react";
+import { AIToolForm } from "@/components/ai-tools/AIToolForm";
+import { AIToolCard } from "@/components/ai-tools/AIToolCard";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AITool } from "@/types/blog";
+import { AITool } from "@/types/aiTools";
+
+// Mock data - replace with actual API calls
+const mockTools: AITool[] = [
+  {
+    id: "1",
+    name: "ChatGPT",
+    description: "Advanced language model for natural conversations and text generation",
+    logoUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
+    websiteUrl: "https://chat.openai.com",
+    category: "Text Generation"
+  },
+  {
+    id: "2",
+    name: "DALL-E",
+    description: "AI system that creates realistic images and art from natural language descriptions",
+    logoUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
+    websiteUrl: "https://openai.com/dall-e-2",
+    category: "Image Generation"
+  }
+];
 
 const AdminAITools = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -14,20 +35,13 @@ const AdminAITools = () => {
 
   const { data: tools = [], isLoading } = useQuery({
     queryKey: ['ai-tools'],
-    queryFn: () => Promise.resolve([]), // Replace with actual API call
+    queryFn: () => Promise.resolve(mockTools), // Replace with actual API call
   });
 
   const addToolMutation = useMutation({
     mutationFn: (tool: Omit<AITool, "id">) => {
       console.log("Adding new AI tool:", tool);
-      return Promise.resolve({ 
-        id: Date.now().toString(),
-        name: tool.name,
-        description: tool.description,
-        url: tool.url,
-        category: tool.category,
-        imageUrl: tool.imageUrl
-      });
+      return Promise.resolve({ id: Date.now().toString(), ...tool });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-tools'] });
@@ -73,61 +87,38 @@ const AdminAITools = () => {
       </div>
 
       {(isFormOpen || editingTool) && (
-        <AIToolForm
-          onSubmit={(data) => {
-            if (editingTool) {
-              updateToolMutation.mutate({ ...data, id: editingTool.id } as AITool);
-            } else {
-              addToolMutation.mutate(data as Omit<AITool, "id">);
-            }
-          }}
-          onCancel={() => {
-            setIsFormOpen(false);
-            setEditingTool(null);
-          }}
-          initialData={editingTool}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>{editingTool ? "Edit AI Tool" : "Add New AI Tool"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AIToolForm
+              onSubmit={(data) => {
+                if (editingTool) {
+                  updateToolMutation.mutate({ ...data, id: editingTool.id });
+                } else {
+                  addToolMutation.mutate(data);
+                }
+              }}
+              onCancel={() => {
+                setIsFormOpen(false);
+                setEditingTool(null);
+              }}
+              initialData={editingTool}
+            />
+          </CardContent>
+        </Card>
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool: AITool) => (
-          <Card key={tool.id} className="relative group">
-            <CardHeader className="space-y-0 pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Bot className="h-5 w-5" />
-                {tool.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">{tool.description}</p>
-              <div className="flex justify-between items-center">
-                <a
-                  href={tool.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  Try it out
-                </a>
-                <div className="space-x-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setEditingTool(tool)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => deleteToolMutation.mutate(tool.id)}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {tools.map((tool) => (
+          <AIToolCard
+            key={tool.id}
+            tool={tool}
+            isAdmin={true}
+            onEdit={setEditingTool}
+            onDelete={(id) => deleteToolMutation.mutate(id)}
+          />
         ))}
       </div>
     </div>
