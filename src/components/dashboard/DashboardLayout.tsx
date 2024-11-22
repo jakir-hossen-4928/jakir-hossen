@@ -57,7 +57,7 @@ export const DashboardLayout = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Mobile Menu Button */}
+      {/* Mobile Header */}
       <div className="flex items-center justify-between lg:hidden fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 py-2 border-b">
         <Button
           variant="ghost"
@@ -67,7 +67,7 @@ export const DashboardLayout = () => {
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle menu</span>
         </Button>
-        <h2 className="text-lg font-semibold text-primary hidden">
+        <h2 className="text-lg font-semibold text-primary">
           {getCurrentPageName()}
         </h2>
       </div>
