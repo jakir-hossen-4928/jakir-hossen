@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/AuthContext";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { UserDashboardLayout } from "@/components/dashboard/UserDashboardLayout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -13,6 +14,10 @@ import AdminProjects from "./pages/AdminProjects";
 import AdminBlog from "./pages/AdminBlog";
 import AdminUsers from "./pages/AdminUsers";
 import AdminBooks from "./pages/AdminBooks";
+import UserDashboard from "./pages/user/UserDashboard";
+import UserBlogs from "./pages/user/UserBlogs";
+import UserBooks from "./pages/user/UserBooks";
+import CreateBlog from "./pages/user/CreateBlog";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +37,12 @@ const App = () => (
                 <Route path="/admin/blog" element={<AdminBlog />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/admin/books" element={<AdminBooks />} />
+              </Route>
+              <Route element={<UserDashboardLayout />}>
+                <Route path="/user" element={<UserDashboard />} />
+                <Route path="/user/blogs" element={<UserBlogs />} />
+                <Route path="/user/books" element={<UserBooks />} />
+                <Route path="/user/create-blog" element={<CreateBlog />} />
               </Route>
             </Routes>
           </BrowserRouter>
