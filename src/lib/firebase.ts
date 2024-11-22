@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, connectAuthEmulator } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, connectAuthEmulator, signInAnonymously } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -21,4 +21,9 @@ export const facebookProvider = new FacebookAuthProvider();
 if (import.meta.env.DEV) {
   connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
   connectFirestoreEmulator(db, 'localhost', 8080);
+  
+  // Automatically sign in anonymously in development
+  signInAnonymously(auth).catch((error) => {
+    console.error("Error signing in anonymously:", error);
+  });
 }
