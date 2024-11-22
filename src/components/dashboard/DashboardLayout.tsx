@@ -7,6 +7,7 @@ import {
   FileText,
   FolderKanban,
   Menu,
+  BookOpen,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
@@ -15,6 +16,7 @@ const navigation = [
   { name: "Projects", href: "/admin/projects", icon: FolderKanban },
   { name: "Blog", href: "/admin/blog", icon: FileText },
   { name: "Users", href: "/admin/users", icon: Users },
+  { name: "Books", href: "/admin/books", icon: BookOpen },
 ];
 
 export const DashboardLayout = () => {

@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminProjects from "./pages/AdminProjects";
 import AdminBlog from "./pages/AdminBlog";
 import AdminUsers from "./pages/AdminUsers";
+import AdminBooks from "./pages/AdminBooks";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
                 <Route path="/admin/projects" element={<AdminProjects />} />
                 <Route path="/admin/blog" element={<AdminBlog />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/books" element={<AdminBooks />} />
               </Route>
             </Routes>
           </BrowserRouter>
