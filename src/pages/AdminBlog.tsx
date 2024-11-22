@@ -7,11 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { RichTextEditor } from "@/components/editor/RichTextEditor";
 import { BlogCard } from "@/components/blog/BlogCard";
+import { CreateBlogForm } from "@/components/blog/CreateBlogForm";
 
 // Fake blog data for demonstration
 const FAKE_BLOGS = [
@@ -48,58 +47,25 @@ const FAKE_BLOGS = [
 
 const AdminBlog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-  });
   const [blogs, setBlogs] = useState(FAKE_BLOGS);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.title.trim() || !formData.content.trim()) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-    
+  const handleCreateBlog = (blogData: any) => {
     const newBlog = {
       id: String(blogs.length + 1),
-      title: formData.title,
-      description: formData.content,
-      coverImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      ...blogData,
       date: new Date().toISOString().split('T')[0],
-      author: "Admin User",
-      category: "General",
-      tags: ["New"],
       comments: [],
     };
     
     setBlogs([newBlog, ...blogs]);
     toast.success("Blog post created successfully!");
     setIsDialogOpen(false);
-    setFormData({ title: "", content: "" });
   };
 
-  const BlogForm = ({ onSubmit }: { onSubmit: (e: React.FormEvent) => void }) => (
-    <form onSubmit={onSubmit} className="space-y-6">
-      <Input
-        placeholder="Post Title"
-        value={formData.title}
-        onChange={(e) =>
-          setFormData({ ...formData, title: e.target.value })
-        }
-        required
-      />
-      <div className="min-h-[400px]">
-        <RichTextEditor
-          onChange={(content) => setFormData({ ...formData, content })}
-          initialContent={formData.content}
-        />
-      </div>
-      <Button type="submit" className="w-full">
-        Create Post
-      </Button>
-    </form>
-  );
+  const handleDeleteBlog = (blogId: string) => {
+    setBlogs(blogs.filter(blog => blog.id !== blogId));
+    toast.success("Blog post deleted successfully!");
+  };
 
   return (
     <div className="space-y-8">
@@ -116,14 +82,24 @@ const AdminBlog = () => {
             <DialogHeader>
               <DialogTitle>Create New Blog Post</DialogTitle>
             </DialogHeader>
-            <BlogForm onSubmit={handleSubmit} />
+            <CreateBlogForm onSubmit={handleCreateBlog} />
           </DialogContent>
         </Dialog>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         {blogs.map((blog) => (
-          <BlogCard key={blog.id} {...blog} />
+          <div key={blog.id} className="relative group">
+            <BlogCard {...blog} />
+            <Button
+              variant="destructive"
+              size="icon"
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => handleDeleteBlog(blog.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
         ))}
       </div>
     </div>
