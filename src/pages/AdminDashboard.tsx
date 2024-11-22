@@ -35,7 +35,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-row-reverse md:flex-row justify-between items-center">
         <h1 className="hidden md:block text-3xl font-bold">Dashboard Overview</h1>
         <Button onClick={logout} variant="destructive">
           Logout
