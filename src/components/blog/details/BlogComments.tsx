@@ -10,6 +10,7 @@ interface BlogCommentsProps {
   comments: Comment[];
   onAddComment: (text: string) => void;
   onLikeComment: (commentId: string) => void;
+  onAddReply?: (commentId: string, text: string) => void;
 }
 
 export const BlogComments = ({
