@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Bot } from "lucide-react";
 import { AIToolForm } from "@/components/ai-tools/AIToolForm";
 import { AIToolCard } from "@/components/ai-tools/AIToolCard";
+import { SearchBar } from "@/components/SearchBar";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AITool } from "@/types/aiTools";
@@ -30,6 +31,7 @@ const mockTools: AITool[] = [
 const AdminAITools = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTool, setEditingTool] = useState<AITool | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
 
   const { data: tools = [], isLoading } = useQuery({
@@ -80,6 +82,12 @@ const AdminAITools = () => {
     },
   });
 
+  const filteredTools = tools.filter(tool => 
+    tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    tool.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -92,6 +100,12 @@ const AdminAITools = () => {
           <Plus className="h-4 w-4" /> Add New Tool
         </Button>
       </div>
+
+      <SearchBar 
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search AI tools..."
+      />
 
       {(isFormOpen || editingTool) && (
         <Card>
@@ -118,7 +132,7 @@ const AdminAITools = () => {
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool) => (
+        {filteredTools.map((tool) => (
           <AIToolCard
             key={tool.id}
             tool={tool}

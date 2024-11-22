@@ -13,12 +13,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { BlogCard } from "@/components/blog/BlogCard";
+import { SearchBar } from "@/components/SearchBar";
 import { Plus } from "lucide-react";
 
 const AdminBlog = () => {
   const navigate = useNavigate();
   const editor = useRef(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [blogs, setBlogs] = useState([
     {
       id: "1",
@@ -36,7 +38,7 @@ const AdminBlog = () => {
   const [newBlog, setNewBlog] = useState({
     title: "",
     content: "",
-    description: "", // Added description field
+    description: "",
     coverImage: "",
     category: "",
     tags: [] as string[],
@@ -64,7 +66,7 @@ const AdminBlog = () => {
     const blog = {
       id: String(blogs.length + 1),
       ...newBlog,
-      description: newBlog.content.substring(0, 150) + "...", // Generate description from content
+      description: newBlog.content.substring(0, 150) + "...",
       date: new Date().toISOString().split('T')[0],
       comments: [],
     };
@@ -87,6 +89,13 @@ const AdminBlog = () => {
     setBlogs(blogs.filter(blog => blog.id !== blogId));
     toast.success("Blog post deleted successfully!");
   };
+
+  const filteredBlogs = blogs.filter(blog =>
+    blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    blog.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    blog.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    blog.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
     <div className="space-y-8">
@@ -162,8 +171,14 @@ const AdminBlog = () => {
         </Dialog>
       </div>
 
+      <SearchBar 
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search blog posts..."
+      />
+
       <div className="grid gap-6 md:grid-cols-2">
-        {blogs.map((blog) => (
+        {filteredBlogs.map((blog) => (
           <BlogCard 
             key={blog.id} 
             {...blog} 

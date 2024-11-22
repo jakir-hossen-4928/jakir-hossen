@@ -7,17 +7,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { SearchBar } from "@/components/SearchBar";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Plus } from "lucide-react";
-import { toast } from "sonner";
 import { BookCard } from "@/components/books/BookCard";
 import { BookDetailsModal } from "@/components/books/BookDetailsModal";
 import { mockBooks } from "@/data/mockBooks";
@@ -48,14 +39,8 @@ const authors = [
 const AdminBooks = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [books, setBooks] = useState<Book[]>(mockBooks);
-  const [newBook, setNewBook] = useState<Omit<Book, "id">>({
-    title: "",
-    author: "",
-    category: "",
-    coverUrl: "",
-    description: "",
-  });
+  const [books] = useState<Book[]>(mockBooks);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleAddBook = () => {
     if (!newBook.title || !newBook.author || !newBook.category) {
@@ -84,6 +69,12 @@ const AdminBooks = () => {
     setBooks(books.filter((book) => book.id !== bookId));
     toast.success("Book deleted successfully!");
   };
+
+  const filteredBooks = books.filter(book =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    book.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-8">
@@ -187,8 +178,14 @@ const AdminBooks = () => {
         </Dialog>
       </div>
 
+      <SearchBar 
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search books..."
+      />
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {books.map((book) => (
+        {filteredBooks.map((book) => (
           <BookCard
             key={book.id}
             book={book}
