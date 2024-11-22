@@ -11,30 +11,43 @@ import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { RichTextEditor } from "@/components/editor/RichTextEditor";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BlogCard } from "@/components/blog/BlogCard";
 
 // Fake blog data for demonstration
 const FAKE_BLOGS = [
   {
-    id: 1,
+    id: "1",
     title: "Getting Started with React and TypeScript",
-    content: "Learn how to set up a new React project with TypeScript...",
+    description: "Learn how to set up a new React project with TypeScript and build your first component. We'll cover the basics of TypeScript and how it can improve your React development experience.",
+    coverImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
     date: "2024-02-20",
-    author: "John Doe"
+    author: "John Doe",
+    category: "Development",
+    tags: ["React", "TypeScript", "Web Development"],
+    comments: [
+      {
+        id: "1",
+        text: "Great article! Very helpful for beginners.",
+        author: "Jane Smith",
+        date: "2024-02-21",
+      },
+    ],
   },
   {
-    id: 2,
-    title: "Building Scalable APIs with Node.js",
-    content: "Best practices for creating maintainable Node.js APIs...",
+    id: "2",
+    title: "Building Modern UIs with Tailwind CSS",
+    description: "Discover how to create beautiful and responsive user interfaces using Tailwind CSS. This guide covers the fundamentals and advanced techniques for efficient UI development.",
+    coverImage: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
     date: "2024-02-19",
-    author: "Jane Smith"
-  }
+    author: "Jane Smith",
+    category: "Design",
+    tags: ["Tailwind", "CSS", "UI Design"],
+    comments: [],
+  },
 ];
 
 const AdminBlog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<any>(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -49,51 +62,24 @@ const AdminBlog = () => {
     }
     
     const newBlog = {
-      id: blogs.length + 1,
-      ...formData,
+      id: String(blogs.length + 1),
+      title: formData.title,
+      description: formData.content,
+      coverImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
       date: new Date().toISOString().split('T')[0],
-      author: "Current User"
+      author: "Admin User",
+      category: "General",
+      tags: ["New"],
+      comments: [],
     };
+    
     setBlogs([newBlog, ...blogs]);
     toast.success("Blog post created successfully!");
     setIsDialogOpen(false);
     setFormData({ title: "", content: "" });
   };
 
-  const handleEdit = (blog: any) => {
-    setSelectedBlog(blog);
-    setFormData({
-      title: blog.title,
-      content: blog.content,
-    });
-    setIsEditDialogOpen(true);
-  };
-
-  const handleUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.title.trim() || !formData.content.trim()) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    const updatedBlogs = blogs.map((blog) =>
-      blog.id === selectedBlog.id
-        ? {
-            ...blog,
-            title: formData.title,
-            content: formData.content,
-          }
-        : blog
-    );
-
-    setBlogs(updatedBlogs);
-    toast.success("Blog post updated successfully!");
-    setIsEditDialogOpen(false);
-    setSelectedBlog(null);
-    setFormData({ title: "", content: "" });
-  };
-
-  const BlogForm = ({ onSubmit, isEdit = false }: { onSubmit: (e: React.FormEvent) => void, isEdit?: boolean }) => (
+  const BlogForm = ({ onSubmit }: { onSubmit: (e: React.FormEvent) => void }) => (
     <form onSubmit={onSubmit} className="space-y-6">
       <Input
         placeholder="Post Title"
@@ -110,7 +96,7 @@ const AdminBlog = () => {
         />
       </div>
       <Button type="submit" className="w-full">
-        {isEdit ? "Update Post" : "Create Post"}
+        Create Post
       </Button>
     </form>
   );
@@ -135,35 +121,9 @@ const AdminBlog = () => {
         </Dialog>
       </div>
 
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Blog Post</DialogTitle>
-          </DialogHeader>
-          <BlogForm onSubmit={handleUpdate} isEdit />
-        </DialogContent>
-      </Dialog>
-
-      <div className="grid gap-6">
+      <div className="grid gap-6 md:grid-cols-2">
         {blogs.map((blog) => (
-          <Card key={blog.id} className="relative">
-            <CardHeader>
-              <CardTitle>{blog.title}</CardTitle>
-              <CardDescription>
-                Published on {blog.date} by {blog.author}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-muted-foreground" dangerouslySetInnerHTML={{ __html: blog.content }} />
-              <Button 
-                variant="outline" 
-                className="mt-4"
-                onClick={() => handleEdit(blog)}
-              >
-                Edit Post
-              </Button>
-            </CardContent>
-          </Card>
+          <BlogCard key={blog.id} {...blog} />
         ))}
       </div>
     </div>
