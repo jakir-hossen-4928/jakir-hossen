@@ -36,6 +36,7 @@ const AdminBlog = () => {
   const [newBlog, setNewBlog] = useState({
     title: "",
     content: "",
+    description: "", // Added description field
     coverImage: "",
     category: "",
     tags: [] as string[],
@@ -63,6 +64,7 @@ const AdminBlog = () => {
     const blog = {
       id: String(blogs.length + 1),
       ...newBlog,
+      description: newBlog.content.substring(0, 150) + "...", // Generate description from content
       date: new Date().toISOString().split('T')[0],
       comments: [],
     };
@@ -71,6 +73,7 @@ const AdminBlog = () => {
     setNewBlog({
       title: "",
       content: "",
+      description: "",
       coverImage: "",
       category: "",
       tags: [],
