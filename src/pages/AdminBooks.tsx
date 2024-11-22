@@ -16,9 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Share2, Pencil, Trash } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BookCard } from "@/components/books/BookCard";
+import { BookDetailsModal } from "@/components/books/BookDetailsModal";
+import { mockBooks } from "@/data/mockBooks";
+import { Book } from "@/types/books";
 
 // Book categories
 const categories = [
@@ -33,7 +36,7 @@ const categories = [
   "Other",
 ];
 
-// Mock authors from your list
+// Authors from your list
 const authors = [
   "জিম ভানভীর",
   "ইমাম ইবনুল জাওজি (রাহিমাহুল্লাহা)",
@@ -42,18 +45,10 @@ const authors = [
   // ... Add all other authors from your list
 ];
 
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  category: string;
-  coverUrl: string;
-  description: string;
-}
-
 const AdminBooks = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [books, setBooks] = useState<Book[]>([]);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [books, setBooks] = useState<Book[]>(mockBooks);
   const [newBook, setNewBook] = useState<Omit<Book, "id">>({
     title: "",
     author: "",
@@ -83,11 +78,6 @@ const AdminBooks = () => {
     });
     setIsAddDialogOpen(false);
     toast.success("Book added successfully!");
-  };
-
-  const handleShare = (bookId: string) => {
-    // Implement sharing functionality
-    toast.success("Sharing options coming soon!");
   };
 
   const handleDelete = (bookId: string) => {
@@ -199,51 +189,20 @@ const AdminBooks = () => {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {books.map((book) => (
-          <Card key={book.id}>
-            <CardHeader>
-              <div className="aspect-[3/4] relative mb-4">
-                <img
-                  src={book.coverUrl || "/placeholder.svg"}
-                  alt={book.title}
-                  className="rounded-lg object-cover w-full h-full"
-                />
-              </div>
-              <CardTitle className="line-clamp-2">{book.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Author: {book.author}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Category: {book.category}
-                </p>
-                {book.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-3">
-                    {book.description}
-                  </p>
-                )}
-                <div className="flex gap-2 mt-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare(book.id)}
-                  >
-                    <Share2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDelete(book.id)}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <BookCard
+            key={book.id}
+            book={book}
+            onDelete={handleDelete}
+            onViewDetails={setSelectedBook}
+          />
         ))}
       </div>
+
+      <BookDetailsModal
+        book={selectedBook}
+        isOpen={!!selectedBook}
+        onClose={() => setSelectedBook(null)}
+      />
     </div>
   );
 };
