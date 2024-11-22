@@ -1,27 +1,30 @@
+// Move content from src/components/dashboard/DashboardLayout.tsx
 import { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import {
   LayoutDashboard,
-  BookOpen,
+  Users,
   FileText,
-  PenSquare,
+  FolderKanban,
   Menu,
+  BookOpen,
   LogOut,
   Bot,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 const navigation = [
-  { name: "Overview", href: "/user", icon: LayoutDashboard },
-  { name: "Blogs", href: "/user/blogs", icon: FileText },
-  { name: "Books", href: "/user/books", icon: BookOpen },
-  { name: "AI Tools", href: "/user/ai-tools", icon: Bot },
-  { name: "Create Blog", href: "/user/create-blog", icon: PenSquare },
+  { name: "Overview", href: "/admin", icon: LayoutDashboard },
+  { name: "Projects", href: "/admin/projects", icon: FolderKanban },
+  { name: "Blog", href: "/admin/blog", icon: FileText },
+  { name: "Users", href: "/admin/users", icon: Users },
+  { name: "Books", href: "/admin/books", icon: BookOpen },
+  { name: "AI Tools", href: "/admin/ai-tools", icon: Bot },
 ];
 
-export const UserDashboardLayout = () => {
+export const AdminDashboardLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { logout } = useAuth();
@@ -77,7 +80,7 @@ export const UserDashboardLayout = () => {
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="w-[240px] p-0">
           <div className="px-4 py-6 border-b">
-            <h2 className="text-lg font-semibold text-primary">Dashboard</h2>
+            <h2 className="text-lg font-semibold text-primary">Admin Panel</h2>
           </div>
           <nav className="flex flex-col gap-1 p-4">
             <NavLinks showLabels={true} />
@@ -87,21 +90,11 @@ export const UserDashboardLayout = () => {
 
       <div className="hidden lg:flex fixed inset-y-0 flex-col w-64 border-r">
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-bold text-primary">Dashboard</h2>
+          <h2 className="text-2xl font-bold text-primary">Admin Panel</h2>
         </div>
         <nav className="flex-1 space-y-1 p-4">
           <NavLinks showLabels={true} />
         </nav>
-        <div className="p-4 border-t">
-          <Button
-            variant="ghost"
-            onClick={logout}
-            className="w-full flex items-center gap-2 justify-center"
-          >
-            <LogOut className="h-5 w-5" />
-            <span>Logout</span>
-          </Button>
-        </div>
       </div>
 
       <div className="lg:pl-64 min-h-screen pt-14 lg:pt-0">

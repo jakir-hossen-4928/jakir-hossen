@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { UserDashboardLayout } from "@/components/dashboard/UserDashboardLayout";
+import { AdminDashboardLayout } from "@/components/admin-dashboard/AdminDashboardLayout";
+import { UserDashboardLayout } from "@/components/user-dashboard/UserDashboardLayout";
 import Loading from "@/components/ui/loading";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 import AdminRoute from "./adminRoute/AdminRoute";
@@ -51,7 +51,7 @@ export const routes = createBrowserRouter([
     element: (
       <PrivateRoute>
         <AdminRoute>
-          <DashboardLayout />
+          <AdminDashboardLayout />
         </AdminRoute>
       </PrivateRoute>
     ),
