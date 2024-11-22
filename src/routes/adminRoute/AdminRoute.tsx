@@ -2,10 +2,10 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const location = useLocation();
 
-  if (!user?.isAdmin) {
+  if (!isAdmin) {
     return <Navigate to="/dashboard" state={{ from: location }} replace />;
   }
 
