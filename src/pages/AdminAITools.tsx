@@ -35,7 +35,7 @@ const AdminAITools = () => {
 
   const { data: tools = [], isLoading } = useQuery({
     queryKey: ['ai-tools'],
-    queryFn: () => Promise.resolve(mockTools), // Replace with actual API call
+    queryFn: () => Promise.resolve(mockTools),
   });
 
   const addToolMutation = useMutation({
