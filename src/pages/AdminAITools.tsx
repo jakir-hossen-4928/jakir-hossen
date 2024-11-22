@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash, Robot } from "lucide-react";
+import { Plus, Edit, Trash, Bot } from "lucide-react";
 import { AIToolForm } from "@/components/dashboard/AIToolForm";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -96,7 +96,7 @@ const AdminAITools = () => {
           <Card key={tool.id} className="relative group">
             <CardHeader className="space-y-0 pb-2">
               <CardTitle className="text-xl flex items-center gap-2">
-                <Robot className="h-5 w-5" />
+                <Bot className="h-5 w-5" />
                 {tool.name}
               </CardTitle>
             </CardHeader>

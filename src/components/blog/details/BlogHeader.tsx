@@ -23,13 +23,23 @@ export const BlogHeader = ({
 }: BlogHeaderProps) => {
   const navigate = useNavigate();
 
+  const handleBack = () => {
+    // Check if we can go back in history
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      // Fallback to home page if no history
+      navigate('/');
+    }
+  };
+
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="flex items-center gap-2 mb-4">
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={() => navigate(-1)}
+          onClick={handleBack}
           className="hover:bg-accent/10"
         >
           <ArrowLeft className="h-5 w-5" />

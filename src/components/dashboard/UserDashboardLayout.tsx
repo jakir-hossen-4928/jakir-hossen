@@ -9,7 +9,7 @@ import {
   PenSquare,
   Menu,
   LogOut,
-  Robot,
+  Bot,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
@@ -17,7 +17,7 @@ const navigation = [
   { name: "Overview", href: "/user", icon: LayoutDashboard },
   { name: "Blogs", href: "/user/blogs", icon: FileText },
   { name: "Books", href: "/user/books", icon: BookOpen },
-  { name: "AI Tools", href: "/user/ai-tools", icon: Robot },
+  { name: "AI Tools", href: "/user/ai-tools", icon: Bot },
   { name: "Create Blog", href: "/user/create-blog", icon: PenSquare },
 ];
 

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Robot } from "lucide-react";
+import { Bot } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 interface AITool {
@@ -30,7 +30,7 @@ const UserAITools = () => {
           <Card key={tool.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="space-y-0 pb-2">
               <CardTitle className="text-xl flex items-center gap-2">
-                <Robot className="h-5 w-5" />
+                <Bot className="h-5 w-5" />
                 {tool.name}
               </CardTitle>
             </CardHeader>
