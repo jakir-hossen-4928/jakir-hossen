@@ -16,6 +16,3 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
-
-// Remove emulator connection since it's causing issues
-// and we want to use the production Firebase services
