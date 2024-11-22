@@ -2,13 +2,16 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, ThumbsUp, Share2 } from "lucide-react";
+import { MessageCircle, ThumbsUp, Share2, User } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface Comment {
   id: string;
   text: string;
   author: string;
+  authorImage?: string;
   date: string;
 }
 
@@ -16,24 +19,34 @@ interface BlogCardProps {
   id: string;
   title: string;
   description: string;
+  content?: string;
   coverImage: string;
   author: string;
   date: string;
   category: string;
   tags: string[];
   comments: Comment[];
+  isDetailView?: boolean;
+  isAdmin?: boolean;
+  onDelete?: (id: string) => void;
 }
 
 export const BlogCard = ({
+  id,
   title,
   description,
+  content,
   coverImage,
   author,
   date,
   category,
   tags,
   comments: initialComments,
+  isDetailView = false,
+  isAdmin = false,
+  onDelete,
 }: BlogCardProps) => {
+  const navigate = useNavigate();
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState("");
 
@@ -46,7 +59,8 @@ export const BlogCard = ({
     const comment: Comment = {
       id: Date.now().toString(),
       text: newComment,
-      author: "Current User", // This should be replaced with actual user data
+      author: "Current User",
+      authorImage: "https://api.dicebear.com/7.x/avatars/svg?seed=current",
       date: new Date().toLocaleDateString(),
     };
 
@@ -55,18 +69,36 @@ export const BlogCard = ({
     toast.success("Comment added successfully!");
   };
 
+  const handleCardClick = () => {
+    if (!isDetailView) {
+      navigate(`/blog/${id}`);
+    }
+  };
+
   return (
-    <Card className="hover-card glass-card overflow-hidden">
+    <Card className={`hover-card glass-card overflow-hidden ${!isDetailView && 'cursor-pointer'}`} onClick={!isDetailView ? handleCardClick : undefined}>
       <div className="relative h-48 w-full overflow-hidden">
         <img
           src={coverImage || "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"}
           alt={title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
         />
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4 flex gap-2">
           <span className="bg-primary/80 text-white px-3 py-1 rounded-full text-sm">
             {category}
           </span>
+          {isAdmin && onDelete && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(id);
+              }}
+            >
+              Delete
+            </Button>
+          )}
         </div>
       </div>
 
@@ -84,7 +116,9 @@ export const BlogCard = ({
       </CardHeader>
 
       <CardContent>
-        <p className="text-muted-foreground line-clamp-3">{description}</p>
+        <p className="text-muted-foreground">
+          {isDetailView ? content : description}
+        </p>
         
         <div className="flex flex-wrap gap-2 mt-4">
           {tags.map((tag) => (
@@ -115,24 +149,40 @@ export const BlogCard = ({
 
           <div className="space-y-4">
             {comments.map((comment) => (
-              <div key={comment.id} className="p-3 rounded-lg bg-accent/5">
-                <div className="flex justify-between items-start">
-                  <span className="font-medium">{comment.author}</span>
-                  <span className="text-xs text-muted-foreground">{comment.date}</span>
+              <div key={comment.id} className="flex gap-3 p-3 rounded-lg bg-accent/5">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={comment.authorImage} />
+                  <AvatarFallback>
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start">
+                    <span className="font-medium">{comment.author}</span>
+                    <span className="text-xs text-muted-foreground">{comment.date}</span>
+                  </div>
+                  <p className="mt-1 text-sm">{comment.text}</p>
                 </div>
-                <p className="mt-1 text-sm">{comment.text}</p>
               </div>
             ))}
           </div>
 
-          <div className="flex gap-2">
-            <Input
-              placeholder="Add a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="flex-1"
-            />
-            <Button onClick={handleAddComment}>Comment</Button>
+          <div className="flex gap-3">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="https://api.dicebear.com/7.x/avatars/svg?seed=current" />
+              <AvatarFallback>
+                <User className="h-4 w-4" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 flex gap-2">
+              <Input
+                placeholder="Write a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="flex-1"
+              />
+              <Button onClick={handleAddComment}>Comment</Button>
+            </div>
           </div>
         </div>
       </CardContent>

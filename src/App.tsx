@@ -18,6 +18,7 @@ import UserDashboard from "./pages/user/UserDashboard";
 import UserBlogs from "./pages/user/UserBlogs";
 import UserBooks from "./pages/user/UserBooks";
 import CreateBlog from "./pages/user/CreateBlog";
+import BlogDetails from "./pages/BlogDetails";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/blog/:id" element={<BlogDetails />} />
               <Route element={<DashboardLayout />}>
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/projects" element={<AdminProjects />} />

@@ -7,47 +7,34 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { CreateBlogForm } from "@/components/blog/CreateBlogForm";
 
-// Fake blog data for demonstration
-const FAKE_BLOGS = [
-  {
-    id: "1",
-    title: "Getting Started with React and TypeScript",
-    description: "Learn how to set up a new React project with TypeScript and build your first component. We'll cover the basics of TypeScript and how it can improve your React development experience.",
-    coverImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
-    date: "2024-02-20",
-    author: "John Doe",
-    category: "Development",
-    tags: ["React", "TypeScript", "Web Development"],
-    comments: [
-      {
-        id: "1",
-        text: "Great article! Very helpful for beginners.",
-        author: "Jane Smith",
-        date: "2024-02-21",
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Building Modern UIs with Tailwind CSS",
-    description: "Discover how to create beautiful and responsive user interfaces using Tailwind CSS. This guide covers the fundamentals and advanced techniques for efficient UI development.",
-    coverImage: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-    date: "2024-02-19",
-    author: "Jane Smith",
-    category: "Design",
-    tags: ["Tailwind", "CSS", "UI Design"],
-    comments: [],
-  },
-];
-
 const AdminBlog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [blogs, setBlogs] = useState(FAKE_BLOGS);
+  const [blogs, setBlogs] = useState([
+    {
+      id: "1",
+      title: "Getting Started with React and TypeScript",
+      description: "Learn how to set up a new React project with TypeScript and build your first component. We'll cover the basics of TypeScript and how it can improve your React development experience.",
+      coverImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      date: "2024-02-20",
+      author: "John Doe",
+      category: "Development",
+      tags: ["React", "TypeScript", "Web Development"],
+      comments: [
+        {
+          id: "1",
+          text: "Great article! Very helpful for beginners.",
+          author: "Jane Smith",
+          authorImage: "https://api.dicebear.com/7.x/avatars/svg?seed=Jane",
+          date: "2024-02-21",
+        },
+      ],
+    },
+  ]);
 
   const handleCreateBlog = (blogData: any) => {
     const newBlog = {
@@ -89,17 +76,12 @@ const AdminBlog = () => {
 
       <div className="grid gap-6 md:grid-cols-2">
         {blogs.map((blog) => (
-          <div key={blog.id} className="relative group">
-            <BlogCard {...blog} />
-            <Button
-              variant="destructive"
-              size="icon"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => handleDeleteBlog(blog.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+          <BlogCard 
+            key={blog.id} 
+            {...blog} 
+            isAdmin={true}
+            onDelete={handleDeleteBlog}
+          />
         ))}
       </div>
     </div>
