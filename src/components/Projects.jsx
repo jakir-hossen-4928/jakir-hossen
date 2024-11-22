@@ -56,31 +56,28 @@ export const Projects = () => {
       );
 
   return (
-    <section className="py-16 md:py-24 bg-background/50">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <h2 className="text-3xl font-bold mb-12 text-center">
-          Featured <span className="text-primary">Projects</span>
-        </h2>
-        
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {TECHNOLOGIES.map((tech) => (
-            <Button
-              key={tech}
-              variant={selectedTech === tech ? "default" : "outline"}
-              onClick={() => setSelectedTech(tech)}
-              className="transition-all text-sm"
-              size="sm"
-            >
-              {tech}
-            </Button>
-          ))}
-        </div>
+    <section id="projects" className="py-20 px-6">
+      <h2 className="text-3xl font-bold mb-8 text-center">
+        Featured <span className="text-primary">Projects</span>
+      </h2>
+      
+      <div className="flex flex-wrap justify-center gap-2 mb-12">
+        {TECHNOLOGIES.map((tech) => (
+          <Button
+            key={tech}
+            variant={selectedTech === tech ? "default" : "outline"}
+            onClick={() => setSelectedTech(tech)}
+            className="transition-all"
+          >
+            {tech}
+          </Button>
+        ))}
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredProjects.map((project) => (
-            <ProjectCard key={project.title} {...project} />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        {filteredProjects.map((project) => (
+          <ProjectCard key={project.title} {...project} />
+        ))}
       </div>
     </section>
   );
