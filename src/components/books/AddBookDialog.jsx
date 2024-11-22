@@ -18,11 +18,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Book } from "@/types/books";
 
 export const AddBookDialog = ({ onAddBook, authors, categories }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [newBook, setNewBook] = useState<Omit<Book, "id">>({
+  const [newBook, setNewBook] = useState({
     title: "",
     author: "",
     category: "",
@@ -36,7 +35,7 @@ export const AddBookDialog = ({ onAddBook, authors, categories }) => {
       return;
     }
 
-    const book: Book = {
+    const book = {
       id: Date.now().toString(),
       ...newBook,
     };
