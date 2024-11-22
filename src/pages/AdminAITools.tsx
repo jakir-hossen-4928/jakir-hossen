@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AITool } from "@/types/aiTools";
 
-// Mock data - replace with actual API calls
 const mockTools: AITool[] = [
   {
     id: "1",
@@ -39,8 +38,7 @@ const AdminAITools = () => {
   });
 
   const addToolMutation = useMutation({
-    mutationFn: (newTool: Omit<AITool, "id">) => {
-      // Ensure all required fields are present
+    mutationFn: (newTool: Required<Omit<AITool, "id">>) => {
       const tool: AITool = {
         id: Date.now().toString(),
         name: newTool.name,
@@ -60,7 +58,7 @@ const AdminAITools = () => {
   });
 
   const updateToolMutation = useMutation({
-    mutationFn: (updatedTool: AITool) => {
+    mutationFn: (updatedTool: Required<AITool>) => {
       console.log("Updating AI tool:", updatedTool);
       return Promise.resolve(updatedTool);
     },
@@ -104,9 +102,9 @@ const AdminAITools = () => {
             <AIToolForm
               onSubmit={(data) => {
                 if (editingTool) {
-                  updateToolMutation.mutate({ ...data, id: editingTool.id });
+                  updateToolMutation.mutate({ ...data, id: editingTool.id } as Required<AITool>);
                 } else {
-                  addToolMutation.mutate(data);
+                  addToolMutation.mutate(data as Required<Omit<AITool, "id">>);
                 }
               }}
               onCancel={() => {
