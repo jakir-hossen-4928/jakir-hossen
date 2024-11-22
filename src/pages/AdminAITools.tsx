@@ -5,15 +5,7 @@ import { Plus, Edit, Trash, Bot } from "lucide-react";
 import { AIToolForm } from "@/components/dashboard/AIToolForm";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-interface AITool {
-  id: string;
-  name: string;
-  description: string;
-  url: string;
-  category: string;
-  imageUrl: string;
-}
+import { AITool } from "@/types/blog";
 
 const AdminAITools = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -28,7 +20,14 @@ const AdminAITools = () => {
   const addToolMutation = useMutation({
     mutationFn: (tool: Omit<AITool, "id">) => {
       console.log("Adding new AI tool:", tool);
-      return Promise.resolve({ ...tool, id: Date.now().toString() });
+      return Promise.resolve({ 
+        id: Date.now().toString(),
+        name: tool.name,
+        description: tool.description,
+        url: tool.url,
+        category: tool.category,
+        imageUrl: tool.imageUrl
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-tools'] });
@@ -77,9 +76,9 @@ const AdminAITools = () => {
         <AIToolForm
           onSubmit={(data) => {
             if (editingTool) {
-              updateToolMutation.mutate({ ...data, id: editingTool.id });
+              updateToolMutation.mutate({ ...data, id: editingTool.id } as AITool);
             } else {
-              addToolMutation.mutate(data);
+              addToolMutation.mutate(data as Omit<AITool, "id">);
             }
           }}
           onCancel={() => {

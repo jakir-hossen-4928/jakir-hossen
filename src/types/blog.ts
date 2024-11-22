@@ -22,3 +22,12 @@ export interface Blog {
   isLiked: boolean;
   likesCount: number;
 }
+
+export interface AITool {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  category: string;
+  imageUrl: string;
+}
