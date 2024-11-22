@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -8,10 +9,13 @@ interface LoginModalProps {
 }
 
 export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     await signInWithGoogle();
+    const redirectPath = isAdmin ? "/admin" : "/user";
+    navigate(redirectPath);
     onClose();
   };
 

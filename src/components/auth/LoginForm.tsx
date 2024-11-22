@@ -3,12 +3,13 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     await signInWithGoogle();
-    navigate("/dashboard");
+    const redirectPath = isAdmin ? "/admin" : "/user";
+    navigate(redirectPath);
   };
 
   return (
