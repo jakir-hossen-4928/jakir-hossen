@@ -119,7 +119,7 @@ export const Hero = () => {
         <img 
           src="https://i.ibb.co/Xb5q8JS/photo-1.jpg" 
           alt="Jakir Hossen"
-          className="w-48 h-48 rounded-full object-cover border-4 border-primary mt-8"
+          className="w-48 h-48 rounded-full object-cover border-4 border-primary mt-16 md:mt-0"
         />
         <div className="text-center md:text-left">
           <div className="mb-4">
