@@ -13,7 +13,7 @@ export const ProjectCard = ({
 }) => {
   return (
     <Card className="glass-card hover-card overflow-hidden theme-transition h-full">
-      <div className="h-40 overflow-hidden">
+      <div className="h-48 overflow-hidden">
         <img 
           src={image} 
           alt={title} 
@@ -21,7 +21,7 @@ export const ProjectCard = ({
         />
       </div>
       <CardHeader className="space-y-2">
-        <CardTitle className="text-lg text-primary theme-transition">{title}</CardTitle>
+        <CardTitle className="text-lg font-semibold text-primary theme-transition">{title}</CardTitle>
         <CardDescription className="text-sm text-muted-foreground theme-transition">
           {description}
         </CardDescription>

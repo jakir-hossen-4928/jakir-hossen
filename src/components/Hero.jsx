@@ -73,8 +73,8 @@ export const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen py-20 flex flex-col justify-center items-center relative">
-      <div className="absolute top-4 right-4 z-10">
+    <section className="min-h-screen pt-24 pb-16 flex flex-col justify-center items-center relative">
+      <div className="absolute top-6 right-6 z-10">
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -115,16 +115,16 @@ export const Hero = () => {
         onClose={() => setIsLoginModalOpen(false)}
       />
       
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row items-center gap-12 mb-12">
-          <div className="w-full lg:w-1/3 flex justify-center">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 mb-12">
+          <div className="w-full lg:w-1/3 flex justify-center lg:justify-start">
             <img 
               src="https://i.ibb.co/Xb5q8JS/photo-1.jpg" 
               alt="Jakir Hossen"
-              className="w-48 h-48 rounded-full object-cover border-4 border-primary shadow-lg hover:scale-105 transition-transform duration-300"
+              className="w-40 h-40 lg:w-48 lg:h-48 rounded-full object-cover border-4 border-primary shadow-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
-          <div className="w-full lg:w-2/3 text-center lg:text-left space-y-6">
+          <div className="w-full lg:w-2/3 text-center lg:text-left space-y-4 lg:space-y-6">
             <div>
               <img 
                 src="https://komarev.com/ghpvc/?username=jakir-hossen-4928&color=red" 
@@ -164,14 +164,13 @@ export const Hero = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-w-4xl mx-auto">
           {TECH_BADGES.map((tech) => (
             <img 
               key={tech.name}
               src={tech.image}
               alt={tech.name}
-              className="h-8 cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+              className="h-8 w-full object-contain cursor-pointer hover:scale-105 transition-transform"
             />
           ))}
         </div>
