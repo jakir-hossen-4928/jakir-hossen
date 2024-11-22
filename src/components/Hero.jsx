@@ -73,7 +73,7 @@ export const Hero = () => {
   };
 
   return (
-    <section className="min-h-[90vh] flex flex-col justify-center items-center max-w-5xl mx-auto px-6 animate-fade-up relative pt-20">
+    <section className="min-h-[90vh] flex flex-col justify-center items-center max-w-5xl mx-auto px-6 animate-fade-up relative pt-32">
       <div className="absolute top-4 right-4">
         {user ? (
           <DropdownMenu>
