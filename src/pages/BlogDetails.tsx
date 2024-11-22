@@ -7,6 +7,8 @@ import { BlogActions } from "@/components/blog/details/BlogActions";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, ThumbsUp, Share2, User, Reply } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface Comment {
   id: string;
