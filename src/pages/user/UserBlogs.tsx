@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { PenSquare } from "lucide-react";
 import { BlogCard } from "@/components/blog/BlogCard";
+import { SearchBar } from "@/components/SearchBar";
 
 const UserBlogs = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const [blogs] = useState([
     {
       id: "1",
@@ -38,6 +40,13 @@ const UserBlogs = () => {
     },
   ]);
 
+  const filteredBlogs = blogs.filter(blog =>
+    blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    blog.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    blog.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    blog.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -48,8 +57,14 @@ const UserBlogs = () => {
         </Button>
       </div>
 
+      <SearchBar 
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search blogs..."
+      />
+
       <div className="grid gap-6 md:grid-cols-2">
-        {blogs.map((blog) => (
+        {filteredBlogs.map((blog) => (
           <BlogCard key={blog.id} {...blog} />
         ))}
       </div>

@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { AIToolCard } from "@/components/ai-tools/AIToolCard";
 import { useQuery } from "@tanstack/react-query";
 import { AITool } from "@/types/aiTools";
+import { SearchBar } from "@/components/SearchBar";
 
 // Mock data - replace with actual API call
 const mockTools: AITool[] = [
@@ -23,10 +25,17 @@ const mockTools: AITool[] = [
 ];
 
 const UserAITools = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const { data: tools = [], isLoading } = useQuery({
     queryKey: ['ai-tools'],
-    queryFn: () => Promise.resolve(mockTools), // Replace with actual API call
+    queryFn: () => Promise.resolve(mockTools),
   });
+
+  const filteredTools = tools.filter(tool => 
+    tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    tool.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -36,8 +45,14 @@ const UserAITools = () => {
     <div className="space-y-8">
       <h1 className="text-3xl font-bold">AI Tools</h1>
       
+      <SearchBar 
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search AI tools..."
+      />
+      
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool) => (
+        {filteredTools.map((tool) => (
           <AIToolCard key={tool.id} tool={tool} />
         ))}
       </div>
