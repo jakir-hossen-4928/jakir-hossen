@@ -39,9 +39,18 @@ const AdminAITools = () => {
   });
 
   const addToolMutation = useMutation({
-    mutationFn: (tool: Omit<AITool, "id">) => {
+    mutationFn: (newTool: Omit<AITool, "id">) => {
+      // Ensure all required fields are present
+      const tool: AITool = {
+        id: Date.now().toString(),
+        name: newTool.name,
+        description: newTool.description,
+        logoUrl: newTool.logoUrl,
+        websiteUrl: newTool.websiteUrl,
+        category: newTool.category
+      };
       console.log("Adding new AI tool:", tool);
-      return Promise.resolve({ id: Date.now().toString(), ...tool });
+      return Promise.resolve(tool);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-tools'] });
@@ -51,9 +60,9 @@ const AdminAITools = () => {
   });
 
   const updateToolMutation = useMutation({
-    mutationFn: (tool: AITool) => {
-      console.log("Updating AI tool:", tool);
-      return Promise.resolve(tool);
+    mutationFn: (updatedTool: AITool) => {
+      console.log("Updating AI tool:", updatedTool);
+      return Promise.resolve(updatedTool);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-tools'] });
