@@ -9,6 +9,7 @@ import { TechnologyInput } from "./project-form/TechnologyInput";
 import { useState } from "react";
 import { toast } from "sonner";
 import { RichTextEditor } from "@/components/editor/RichTextEditor";
+import { projectsService } from "@/services/projects"; // Ensure the service is imported
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -32,7 +33,7 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }) => {
     }
   });
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     if (selectedTechnologies.length === 0) {
       toast.error("Please add at least one technology");
       return;
@@ -44,7 +45,19 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }) => {
       features: values.features.split("\n").filter(feature => feature.trim())
     };
 
-    onSubmit(project);
+    try {
+      if (mode === "add") {
+        // Add the project to Firestore
+        await projectsService.addProject(project);
+      } else {
+        // Update the project (implement this functionality if needed)
+      }
+
+      toast.success(mode === "add" ? "Project added successfully!" : "Project updated successfully!");
+      onSubmit(project); // Call the parent onSubmit if needed (e.g., close dialog or update list)
+    } catch (error) {
+      toast.error("Failed to add project.");
+    }
   };
 
   return (
@@ -74,10 +87,7 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }) => {
             <FormItem>
               <FormLabel>Project Image URL</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="https://example.com/image.jpg"
-                  {...field}
-                />
+                <Input placeholder="https://example.com/image.jpg" {...field} />
               </FormControl>
               <FormDescription>
                 Provide a URL for your project's preview image
@@ -109,7 +119,7 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }) => {
 
         <div className="space-y-2">
           <FormLabel>Technologies</FormLabel>
-          <TechnologyInput 
+          <TechnologyInput
             selectedTechnologies={selectedTechnologies}
             setSelectedTechnologies={setSelectedTechnologies}
           />
@@ -122,10 +132,7 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }) => {
             <FormItem>
               <FormLabel>GitHub URL</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="https://github.com/username/project"
-                  {...field}
-                />
+                <Input placeholder="https://github.com/username/project" {...field} />
               </FormControl>
               <FormDescription>
                 Link to your project's GitHub repository
@@ -143,22 +150,20 @@ export const ProjectForm = ({ onSubmit, initialData, mode = "add" }) => {
               <FormLabel>Key Features</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="- Feature 1&#10;- Feature 2&#10;- Feature 3"
-                  className="min-h-[100px] resize-y"
+                  placeholder="- Feature 1\n- Feature 2"
+                  rows={4}
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                List the key features of your project, one per line
+                List the main features of your project
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full">
-          {mode === "add" ? "Add Project" : "Update Project"}
-        </Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

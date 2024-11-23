@@ -14,48 +14,48 @@ import {
 const TECH_BADGES = [
   {
     name: "JavaScript",
-    image: "https://img.shields.io/badge/Javascript-F0DB4F?style=for-the-badge&labelColor=black&logo=javascript&logoColor=F0DB4F"
+    image: "https://img.shields.io/badge/Javascript-F0DB4F?style=for-the-badge&labelColor=black&logo=javascript&logoColor=F0DB4F",
   },
   {
     name: "React",
-    image: "https://img.shields.io/badge/-React-61DBFB?style=for-the-badge&labelColor=black&logo=react&logoColor=61DBFB"
+    image: "https://img.shields.io/badge/-React-61DBFB?style=for-the-badge&labelColor=black&logo=react&logoColor=61DBFB",
   },
   {
     name: "React Native",
-    image: "https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"
+    image: "https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB",
   },
   {
     name: "Node.js",
-    image: "https://img.shields.io/badge/Node.js-3C873A?style=for-the-badge&labelColor=black&logo=node.js&logoColor=3C873A"
+    image: "https://img.shields.io/badge/Node.js-3C873A?style=for-the-badge&labelColor=black&logo=node.js&logoColor=3C873A",
   },
   {
     name: "Express.js",
-    image: "https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"
+    image: "https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white",
   },
   {
     name: "MongoDB",
-    image: "https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"
+    image: "https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white",
   },
   {
     name: "HTML",
-    image: "https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"
+    image: "https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white",
   },
   {
     name: "CSS3",
-    image: "https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"
+    image: "https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white",
   },
   {
     name: "Tailwind CSS",
-    image: "https://img.shields.io/badge/Tailwind_CSS-092749?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4&labelColor=000000"
+    image: "https://img.shields.io/badge/Tailwind_CSS-092749?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4&labelColor=000000",
   },
   {
     name: "Bootstrap",
-    image: "https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white"
+    image: "https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white",
   },
   {
     name: "Appwrite",
-    image: "https://img.shields.io/badge/-Appwrite-FF4F4F?style=for-the-badge&logo=appwrite&logoColor=white"
-  }
+    image: "https://img.shields.io/badge/-Appwrite-FF4F4F?style=for-the-badge&logo=appwrite&logoColor=white",
+  },
 ];
 
 export const Hero = () => {
@@ -78,17 +78,28 @@ export const Hero = () => {
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                {user.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt={user.displayName || "User"}
-                    className="h-10 w-10 rounded-full object-cover"
-                  />
-                ) : (
-                  <User className="h-6 w-6" />
-                )}
-              </Button>
+            <Button
+  variant="ghost"
+  className="relative h-10 w-10 rounded-full p-0 overflow-hidden border border-gray-300 hover:border-gray-400"
+>
+{user.photoURL ? (
+  <img
+    src={user.photoURL}
+    alt={user.displayName || "User Photo"}
+    className="h-full w-full object-cover"
+  />
+) : (
+  <div className="flex items-center justify-center h-full w-full bg-gray-200">
+    <img
+      src="https://i.ibb.co.com/VN4644x/writer1.jpg"
+      alt="Default User Image"
+      className="h-full w-full object-cover"
+    />
+  </div>
+)}
+
+</Button>
+
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => navigate(getDashboardPath())}>
@@ -104,30 +115,35 @@ export const Hero = () => {
           <Button
             variant="outline"
             onClick={() => setIsLoginModalOpen(true)}
+            className="mt-4 p-1"
           >
-            Dashboard Login
+            Sign-In
           </Button>
         )}
       </div>
-      
-      <LoginModal 
+
+      <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
       />
-      
-      <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
-        <img 
-          src="https://i.ibb.co/Xb5q8JS/photo-1.jpg" 
+
+      <div className="flex flex-col md:flex-row items-center gap-8 mb-8 mt-4">
+        <img
+          src="https://i.ibb.co/Xb5q8JS/photo-1.jpg"
           alt="Jakir Hossen"
-          className="w-48 h-48 rounded-full object-cover border-4 border-primary mt-16 md:mt-0"
+          className="w-48 h-48 rounded-full object-cover border-4 border-primary"
         />
         <div className="text-center md:text-left">
           <div className="mb-4">
-            <img src="https://komarev.com/ghpvc/?username=jakir-hossen-4928&color=red" alt="Profile views" className="mx-auto md:mx-0"/>
+            <img src="https://komarev.com/ghpvc/?username=jakir-hossen-4928&color=red" alt="Profile views" className="mx-auto md:mx-0" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Hi 👋, I'm <span className="text-primary">Jakir Hossen</span>
+            Hi 👋, I'm{" "}
+            <span className="text-primary text-xl  text-muted-foreground mb-4">
+              Jakir Hossen
+            </span>
           </h1>
+
           <h2 className="text-xl md:text-2xl text-muted-foreground mb-4">
             Web Developer | App Developer (Learner)
           </h2>
@@ -135,7 +151,15 @@ export const Hero = () => {
             🌱 Currently learning React Native App Development
           </p>
           <ul className="text-muted-foreground space-y-2 mb-6">
-            <li>👨‍💻 All projects available at <a href="https://github.com/jakir-hossen-4928?tab=repositories" className="text-primary hover:underline">my GitHub</a></li>
+            <li>
+              👨‍💻 All projects available at{" "}
+              <a
+                href="https://github.com/jakir-hossen-4928?tab=repositories"
+                className="text-primary hover:underline"
+              >
+                my GitHub
+              </a>
+            </li>
             <li>💬 Ask me about HTML5, CSS3, JS, Bootstrap, Appwrite</li>
             <li>📫 Reach me at mdjakirkhan4928@gmail.com</li>
           </ul>
@@ -150,7 +174,11 @@ export const Hero = () => {
           </a>
         </Button>
         <Button variant="outline" className="flex items-center gap-2" asChild>
-          <a href="https://github.com/jakir-hossen-4928" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com/jakir-hossen-4928"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Github size={20} />
             GitHub
           </a>
@@ -159,12 +187,16 @@ export const Hero = () => {
 
       <div className="flex flex-wrap justify-center gap-4 max-w-4xl">
         {TECH_BADGES.map((tech) => (
-          <img 
+          <img
             key={tech.name}
             src={tech.image}
             alt={tech.name}
             className="h-8 cursor-pointer hover:scale-105 transition-transform"
-            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() =>
+              document
+                .getElementById("projects")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           />
         ))}
       </div>
